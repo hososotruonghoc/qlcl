@@ -1039,7 +1039,7 @@ function checkGateAccess(){
   if(!email||email.indexOf('@')<0){_gateErr('⚠️ Vui lòng nhập email hợp lệ','warn');return;}
   var btn=T('gate-btn');btn.disabled=true;btn.textContent='⏳ Đang kiểm tra...';
   T('gate-err').style.display='none';
-  var url=GATE_URL||GAS||DEFAULT_GAS;
+  var url=GAS||DEFAULT_GAS;
   if(!url){_gateErr('❌ Chưa cấu hình URL hệ thống','err');btn.disabled=false;btn.textContent='🔑 Kiểm tra quyền truy cập';return;}
   fetch(url+'?'+new URLSearchParams({action:'checkAccess',email:email}).toString(),{method:'GET',redirect:'follow'})
     .then(function(r){return r.json();})
