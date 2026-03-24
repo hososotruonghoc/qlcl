@@ -334,6 +334,8 @@ code{font-family:monospace;font-size:12px;background:var(--slate7);padding:2px 6
 /* Sidebar classes for items */
 /* Sidebar role visibility — controlled by body class */
 body:not(.is-admin) .ao{display:none!important}
+body.access-locked .perm-lock{opacity:.5!important;pointer-events:none!important}
+body.access-locked .perm-hide{display:none!important}
 body:not(.is-gvbm) .gv-only{display:none!important}
 
 @media(max-width:960px){
@@ -375,7 +377,9 @@ body:not(.is-gvbm) .gv-only{display:none!important}
   </div>
   <div id="gate-status" style="display:none;text-align:center;padding:20px 0"></div>
   <div id="gate-err" style="display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:13px"></div>
-  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:20px;line-height:1.6">Hệ thống chỉ dành cho đơn vị đã được phê duyệt.<br>Liên hệ quản trị viên để đăng ký.</p>
+  <div style="position:relative;margin:20px 0 12px;text-align:center"><div style="border-top:1px solid #e2e8f0;position:absolute;top:50%;left:0;right:0"></div><span style="background:white;padding:0 12px;font-size:11px;color:#94a3b8;position:relative">hoặc</span></div>
+    <button onclick="enterGuestMode()" style="width:100%;height:44px;background:white;color:#64748b;border:2px solid #e2e8f0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.borderColor='#94a3b8'" onmouseout="this.style.borderColor='#e2e8f0'">👁 Vào chế độ xem (không cần email)</button>
+    <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:14px;line-height:1.6">Liên hệ quản trị viên để đăng ký sử dụng đầy đủ.</p>
 </div>
 </div>
 </div>
@@ -416,6 +420,9 @@ body:not(.is-gvbm) .gv-only{display:none!important}
 
 <!-- ═══ APP ═══ -->
 <div id="app-screen">
+<div id="guest-banner" style="display:none;background:linear-gradient(135deg,#fef3c7,#fff7ed);border-bottom:2px solid #f59e0b;padding:10px 28px;font-size:13px;color:#92400e;position:sticky;top:0;z-index:300;text-align:center">
+  ⚠️ Bạn đang ở <strong>chế độ xem</strong>. Các chức năng thêm/sửa/xóa bị khóa. <button onclick="exitGuestMode()" style="background:#f59e0b;color:white;border:none;border-radius:6px;padding:4px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px;font-family:inherit">🔑 Đăng ký ngay</button>
+</div>
 <div class="app-wrap">
 
 <!-- SIDEBAR -->
@@ -460,7 +467,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
       <div class="sb-section-title">Quản trị hệ thống</div>
       <div class="sb-item ao" onclick="gp('pg-classes',this)"><span class="ico">🏫</span><span>Quản lý lớp</span></div>
       <div class="sb-item ao" onclick="gp('pg-users',this)"><span class="ico">👥</span><span>Phân quyền CBGV</span></div>
-      <div class="sb-item ao" onclick="gp('pg-import',this)"><span class="ico">📥</span><span>Nhập danh sách HS</span></div>
+      <div class="sb-item ao perm-lock" onclick="gp('pg-import',this)"><span class="ico">📥</span><span>Nhập danh sách HS</span></div>
       <div class="sb-item ao" onclick="gp('pg-settings',this)"><span class="ico">⚙️</span><span>Cài đặt hệ thống</span></div>
     </div>
   </div>
@@ -522,7 +529,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     <div class="srch"><span class="si2">🔍</span><input type="text" id="d-q" placeholder="Tìm học sinh..." oninput="debounce(dFil,220)"></div>
     <select id="d-nt" onchange="dFil()"><option value="">Tất cả</option><option value="done">Đã nhập</option><option value="todo">Chưa nhập</option></select>
     <button class="btn bo" onclick="syncNow()">🔄 Đồng bộ</button>
-    <button class="btn bp" onclick="saveAllLop()">☁️ Lưu lên Sheets</button>
+    <button class="btn bp" onclick="saveAllLop()" class="perm-lock">☁️ Lưu lên Sheets</button>
     <span class="rc" id="d-rc"></span>
   </div>
   <div class="tb ao" id="d-import-admin" style="margin-bottom:6px">
@@ -549,8 +556,8 @@ body:not(.is-gvbm) .gv-only{display:none!important}
   <div class="tb">
     <select id="hb-lop" onchange="hbFil()"><option value="">Chọn lớp</option></select>
     <div class="srch"><span class="si2">🔍</span><input type="text" id="hb-q" placeholder="Tìm học sinh..." oninput="debounce(hbFil,220)"></div>
-    <button class="btn bpur" onclick="hbAiBatch()">🤖 AI Nhận xét</button>
-    <button class="btn bg" onclick="hbSaveBatch()">☁️ Lưu tất cả</button>
+    <button class="btn bpur" onclick="hbAiBatch()" class="perm-lock">🤖 AI Nhận xét</button>
+    <button class="btn bg" onclick="hbSaveBatch()" class="perm-lock">☁️ Lưu tất cả</button>
     <button class="btn bout" onclick="hbExportWord()">📄 Word</button>
     <button class="btn bout" onclick="hbExportExcel()">📊 Excel</button>
     <span class="rc" id="hb-rc"></span>
@@ -631,9 +638,9 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     <h2 style="font-size:16px;color:var(--navy);font-family:'Playfair Display',serif">Quản lý danh sách lớp</h2>
     <div style="display:flex;gap:8px">
       <button class="btn bout" onclick="dlMauLop()">📥 Tải mẫu Excel</button>
-      <button class="btn bg" onclick="T('cls-file').click()">📂 Nhập lớp từ Excel</button>
+      <button class="btn bg" onclick="T('cls-file').click()" class="perm-lock">📂 Nhập lớp từ Excel</button>
       <input type="file" id="cls-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importClassFile(this)">
-      <button class="btn bp" onclick="openClsModal(null)">➕ Thêm lớp</button>
+      <button class="btn bp" onclick="openClsModal(null)" class="perm-lock">➕ Thêm lớp</button>
     </div>
   </div>
   <div class="ib blue"><strong>💡 Hướng dẫn</strong><p>Tạo lớp trước, sau đó nhập học sinh vào lớp. Khi nhập HS từ Excel, lớp chưa tồn tại sẽ được tự động tạo.</p></div>
@@ -669,13 +676,13 @@ body:not(.is-gvbm) .gv-only{display:none!important}
       <div class="wf"><label>Tên trường</label><input type="text" id="imp-school" placeholder="Nhập tên trường"></div>
       <div class="wf"><label>Địa chỉ</label><input type="text" id="imp-addr" placeholder="Nhập địa chỉ trường"></div>
       <button class="btn bp" onclick="saveSchoolInfo()">💾 Lưu</button>
-      <button class="btn bg" style="margin-top:10px;width:100%" onclick="upStudents()">⬆ Upload HS lên Sheets</button>
+      <button class="btn bg" style="margin-top:10px;width:100%" onclick="upStudents()" class="perm-lock">⬆ Upload HS lên Sheets</button>
     </div>
     <div class="wiz-step">
       <h3><span class="sn">2</span>Nhập từ Excel</h3>
       <div class="ib blue"><strong>Yêu cầu</strong><p>Cột: STT | Lớp | Họ tên | Ngày sinh | Giới tính</p></div>
       <button class="btn bp" onclick="dlMauHocSinh()" style="margin-bottom:12px;width:100%">📥 Tải file mẫu Excel (STT, Lớp, Họ tên, NS, GT)</button>
-      <div class="drop-zone" id="drop-zone" onclick="T('file-inp').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="onDrop(event)">
+      <div class="drop-zone" id="drop-zone" onclick="T('file-inp').click()" class="perm-lock" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="onDrop(event)">
         <div style="font-size:36px">📂</div><p><strong>Nhấn chọn file</strong> hoặc kéo thả</p>
       </div>
       <input type="file" id="file-inp" accept=".xlsx,.xls,.csv" style="display:none" onchange="onFileChange(this)">
@@ -804,6 +811,7 @@ var PC   = JSON.parse(document.getElementById('_d_pc').textContent);
 
 // STATE
 var GAS='',CU=null,grades={},allS=[],hsF=[],dF=[];
+var ACCESS_LEVEL='guest'; // 'guest' | 'pending' | 'approved'
 var CLASSES=[]; // [{name:'1A',khoi:1,created_at:'...'}]
 try{CLASSES=JSON.parse(localStorage.getItem('_classes')||'[]');}catch(e){CLASSES=[];}
 var hsP=1,dP=1,curK=1,tkKF=0,eIdx=null,ch1=null,ch2=null;
@@ -904,6 +912,7 @@ function loginOK(){
   document.body.classList.toggle('is-gvbm',isGV);
   if(T('user-pill'))T('user-pill').innerHTML='👤 '+(CU.hoten||CU.username)+(isA?' <span class="bl" style="background:var(--rl);color:var(--r);font-size:10px">Admin</span>':' <span class="bl" style="background:var(--gl);color:var(--gd);font-size:10px">GV</span>');
   initApp();
+  applyPermissions();
 }
 function doLogout(){if(!confirm('Đăng xuất?'))return;localStorage.removeItem('_cu');location.reload();}
 
@@ -1034,6 +1043,52 @@ function rebuildDynamic(){
 
 
 // ═══ V3: ACCESS GATE SYSTEM ═══
+
+// ═══ V3: GUEST MODE + PERMISSION CONTROL ═══
+function enterGuestMode(){
+  ACCESS_LEVEL='guest';
+  localStorage.setItem('_gate_status','guest');
+  T('gate-screen').style.display='none';
+  // Bỏ qua setup → vào thẳng login offline
+  T('login-screen').style.display='block';
+  T('guest-banner').style.display='block';
+  applyPermissions();
+}
+
+function exitGuestMode(){
+  localStorage.removeItem('_gate_status');
+  localStorage.removeItem('_gate_email');
+  T('guest-banner').style.display='none';
+  T('gate-screen').style.display='block';
+  T('gate-form').style.display='block';
+  T('gate-status').style.display='none';
+  T('gate-err').style.display='none';
+  T('login-screen').style.display='none';
+  T('app-screen').style.display='none';
+}
+
+function applyPermissions(){
+  var locked=ACCESS_LEVEL!=='approved';
+  // CSS class trên body
+  document.body.classList.toggle('access-locked',locked);
+  document.body.classList.toggle('access-guest',ACCESS_LEVEL==='guest');
+  document.body.classList.toggle('access-pending',ACCESS_LEVEL==='pending');
+  // Banner
+  if(T('guest-banner'))T('guest-banner').style.display=locked?'block':'none';
+  // Disable/enable tất cả nút bị khóa
+  document.querySelectorAll('.perm-lock').forEach(function(el){
+    if(locked){
+      el.setAttribute('data-orig-onclick',el.getAttribute('onclick')||'');
+      el.setAttribute('onclick','toast(\'🔒 Tính năng bị khóa. Vui lòng đăng ký email.\',\'warn\')');
+      el.style.opacity='0.5';el.style.cursor='not-allowed';
+    }else{
+      var orig=el.getAttribute('data-orig-onclick');
+      if(orig)el.setAttribute('onclick',orig);
+      el.style.opacity='';el.style.cursor='';
+    }
+  });
+}
+
 function checkGateAccess(){
   var email=T('gate-email').value.trim().toLowerCase();
   if(!email||email.indexOf('@')<0){_gateErr('⚠️ Vui lòng nhập email hợp lệ','warn');return;}
@@ -1050,6 +1105,7 @@ function checkGateAccess(){
         // Lưu thông tin gate
         localStorage.setItem('_gate_email',email);
         localStorage.setItem('_gate_status','approved');
+        ACCESS_LEVEL='approved';
         localStorage.setItem('_gate_school',r.school_name||'');
         if(r.gas_url){localStorage.setItem('gas_url',r.gas_url);GAS=r.gas_url;DEFAULT_GAS=r.gas_url;}
         // Hiệu ứng success
@@ -1063,7 +1119,11 @@ function checkGateAccess(){
       }else if(r.status==='pending'){
         _gateShow('pending',r.school_name);
       }else{
-        _gateErr('❌ Email chưa được đăng ký trong hệ thống.<br>Liên hệ quản trị viên để được cấp quyền.','err');
+        // Auto-register as pending
+        fetch(url+'?'+new URLSearchParams({action:'registerSchool',email:email,school_name:'(Chờ cập nhật)'}).toString(),{method:'GET',redirect:'follow'})
+          .then(function(){_gateShow('pending','');})
+          .catch(function(){});
+        _gateErr('📝 Email của bạn đã được gửi yêu cầu đăng ký.<br>Quản trị viên sẽ duyệt trong thời gian sớm nhất.','info');
       }
     })
     .catch(function(e){
@@ -1074,9 +1134,9 @@ function checkGateAccess(){
 
 function _gateErr(msg,type){
   var el=T('gate-err');el.style.display='block';el.innerHTML=msg;
-  el.style.background=type==='warn'?'#fef3c7':type==='err'?'#ffe4e6':'#dbeafe';
-  el.style.color=type==='warn'?'#92400e':type==='err'?'#be123c':'#1e40af';
-  el.style.borderLeft='4px solid '+(type==='warn'?'#f59e0b':type==='err'?'#f43f5e':'#3b82f6');
+  el.style.background=type==='warn'?'#fef3c7':type==='err'?'#ffe4e6':type==='info'?'#dbeafe':'#dbeafe';
+  el.style.color=type==='warn'?'#92400e':type==='err'?'#be123c':type==='info'?'#1e40af':'#1e40af';
+  el.style.borderLeft='4px solid '+(type==='warn'?'#f59e0b':type==='err'?'#f43f5e':type==='info'?'#3b82f6':'#3b82f6');
 }
 
 function _gateShow(status,school){
@@ -1088,6 +1148,7 @@ function _gateShow(status,school){
 }
 
 function _afterGateApproved(){
+  ACCESS_LEVEL='approved';applyPermissions();
   // Tiếp tục luồng bình thường: setup → login
   if(!localStorage.getItem('_setup_done')){
     T('setup-screen').style.display='block';
@@ -2879,10 +2940,15 @@ window.addEventListener('load',function(){
     }
     _applySchoolInfo();
     _restoreSession();
+  }else if(gateStatus==='guest'||gateStatus==='pending'){
+    // Guest hoặc pending → cho vào nhưng khóa chức năng
+    ACCESS_LEVEL=gateStatus;
+    T('login-screen').style.display='block';
+    T('guest-banner').style.display='block';
+    setTimeout(applyPermissions,100);
   }else{
     // Chưa qua gate → hiện gate screen
     T('gate-screen').style.display='block';
-    // Pre-fill email nếu đã nhập trước đó
     var savedEmail=localStorage.getItem('_gate_email');
     if(savedEmail&&T('gate-email'))T('gate-email').value=savedEmail;
   }
