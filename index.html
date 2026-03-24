@@ -11,7 +11,7 @@
 <style>
 /* ═══════════════════════════════════════════════
    PHASE 2 — REFINED EDITORIAL DESIGN
-   TH Diễn Liên — QLCL GDTH
+   QLCL GDTH
    ═══════════════════════════════════════════════ */
 
 :root{
@@ -365,7 +365,9 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     <p style="font-size:12.5px;color:#64748b;margin-top:4px">Quản lý Chất lượng Giáo dục Tiểu học</p>
   </div>
   <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Tên đơn vị *</label><input type="text" id="setup-school" placeholder="Trường Tiểu học..." style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
-  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Năm học</label><input type="text" id="setup-year" value="2025-2026" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Năm học</label><input type="text" id="setup-year" placeholder="VD: 2025-2026" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Địa chỉ *</label><input type="text" id="setup-addr" placeholder="Xã ..., Huyện ..., Tỉnh ..." style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Người quản trị</label><input type="text" id="setup-admin" placeholder="Họ tên quản trị viên" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
   <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Google Apps Script URL</label><input type="text" id="setup-gas" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 12px;font-size:12px;outline:none;background:#f8fafc;font-family:inherit"></div>
   <button onclick="doSetup()" style="width:100%;height:48px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🚀 Khởi tạo hệ thống</button>
   <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px">Thông tin có thể thay đổi sau trong Cài đặt.</p>
@@ -378,13 +380,13 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     <div class="icon">🏫</div>
     <h2>Hệ thống QLCL GDTH</h2>
   </div>
-  <div class="lbox-sub">Hệ thống Quản lý Chất lượng Giáo dục Tiểu học<br>Năm học 2025–2026</div>
+  <div class="lbox-sub" id="login-sub">Hệ thống Quản lý Chất lượng Giáo dục Tiểu học</div>
   <div class="lerr" id="lerr"></div>
   <div class="lf"><label>Tên đăng nhập</label><input type="text" id="lu" placeholder="Nhập tên đăng nhập" autocomplete="username"></div>
   <div class="lf"><label>Mật khẩu</label><input type="password" id="lp" placeholder="Nhập mật khẩu" autocomplete="current-password"></div>
   <button class="lbtn" id="lbtn" onclick="doLogin()">Đăng nhập</button>
   <div class="lmode" id="lmode"></div>
-  <div class="lnote">Mặc định: <strong>admin / admin123</strong></div>
+  <div class="lnote" id="login-note"></div>
 </div>
 </div>
 
@@ -398,8 +400,8 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     <div class="sb-brand">
       <div class="sb-brand-icon">🏫</div>
       <div>
-        <h1>TH Diễn Liên</h1>
-        <p>QLCL GDTH · v3.0</p>
+        <h1 id="sb-school">QLCL GDTH</h1>
+        <p id="sb-version">Quản lý Chất lượng</p>
       </div>
     </div>
   </div>
@@ -602,14 +604,15 @@ body:not(.is-gvbm) .gv-only{display:none!important}
   <div style="max-width:620px">
     <div class="wiz-step">
       <h3><span class="sn">1</span>Thông tin trường</h3>
-      <div class="wf"><label>Tên trường</label><input type="text" id="imp-school" placeholder="Trường Tiểu học Diễn Liên"></div>
-      <div class="wf"><label>Địa chỉ</label><input type="text" id="imp-addr" placeholder="Xã Diễn Liên, Huyện Diễn Châu, Tỉnh Nghệ An"></div>
+      <div class="wf"><label>Tên trường</label><input type="text" id="imp-school" placeholder="Nhập tên trường"></div>
+      <div class="wf"><label>Địa chỉ</label><input type="text" id="imp-addr" placeholder="Nhập địa chỉ trường"></div>
       <button class="btn bp" onclick="saveSchoolInfo()">💾 Lưu</button>
       <button class="btn bg" style="margin-top:10px;width:100%" onclick="upStudents()">⬆ Upload HS lên Sheets</button>
     </div>
     <div class="wiz-step">
       <h3><span class="sn">2</span>Nhập từ Excel</h3>
       <div class="ib blue"><strong>Yêu cầu</strong><p>Cột: STT | Lớp | Họ tên | Ngày sinh | Giới tính</p></div>
+      <button class="btn bp" onclick="dlMauHocSinh()" style="margin-bottom:12px;width:100%">📥 Tải file mẫu Excel (STT, Lớp, Họ tên, NS, GT)</button>
       <div class="drop-zone" id="drop-zone" onclick="T('file-inp').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="onDrop(event)">
         <div style="font-size:36px">📂</div><p><strong>Nhấn chọn file</strong> hoặc kéo thả</p>
       </div>
@@ -945,16 +948,56 @@ function rebuildDynamic(){
 }
 
 // Setup + Reset
+
+// ═══ V3: Dynamic school info ═══
+function _applySchoolInfo(){
+  var school=localStorage.getItem('school_name_full')||'';
+  var year=localStorage.getItem('school_year')||'';
+  var addr=localStorage.getItem('school_addr')||'';
+  // Login box
+  var lh=document.querySelector('.lbox h2');if(lh)lh.textContent=school||'Hệ thống QLCL GDTH';
+  var ls=T('login-sub');if(ls)ls.innerHTML='Hệ thống Quản lý Chất lượng Giáo dục Tiểu học'+(year?'<br>Năm học '+year:'');
+  // Sidebar
+  var sbS=T('sb-school');if(sbS)sbS.textContent=school?school.replace(/^Trường Tiểu học\s*/i,'TH ').replace(/^Trường\s*/i,''):'QLCL GDTH';
+  var sbV=T('sb-version');if(sbV)sbV.textContent=year?'Năm học '+year:'Quản lý Chất lượng';
+  // Import page
+  var impS=T('imp-school');if(impS&&school&&!impS.value)impS.value=school;
+  var impA=T('imp-addr');if(impA&&addr&&!impA.value)impA.value=addr;
+}
+
+// ═══ V3: Tải file mẫu Excel nhập học sinh ═══
+function dlMauHocSinh(){
+  var rows=[
+    ['STT','Lớp','Họ tên','Ngày sinh','Giới tính'],
+    [1,'1A','Nguyễn Văn A','01/01/2019','Nam'],
+    [2,'1A','Trần Thị B','15/03/2019','Nữ'],
+    [3,'2A','Lê Văn C','20/06/2018','Nam']
+  ];
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:5},{wch:8},{wch:25},{wch:14},{wch:10}];
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'DanhSachHS');
+  XLSX.writeFile(wb,'Mau_NhapHocSinh.xlsx');
+  toast('📥 Đã tải file mẫu Excel','ok');
+}
+
 function doSetup(){
   var school=T('setup-school').value.trim();
+  var addr=T('setup-addr').value.trim();
+  var year=T('setup-year').value.trim();
   if(!school){alert('Vui lòng nhập tên đơn vị');return;}
+  if(!addr){alert('Vui lòng nhập địa chỉ');return;}
+  if(!year){alert('Vui lòng nhập năm học');return;}
   localStorage.setItem('school_name_full',school);
-  localStorage.setItem('school_year',T('setup-year').value.trim()||'2025-2026');
+  localStorage.setItem('school_addr',addr);
+  localStorage.setItem('school_year',year);
+  var adminName=T('setup-admin').value.trim();
+  if(adminName)localStorage.setItem('admin_name',adminName);
   var gasUrl=T('setup-gas').value.trim();
   if(gasUrl&&gasUrl.indexOf('script.google.com')>=0){localStorage.setItem('gas_url',gasUrl);DEFAULT_GAS=gasUrl;GAS=gasUrl;}
   localStorage.setItem('_setup_done','1');
   T('setup-screen').style.display='none';
-  var h2=document.querySelector('.lbox h2');if(h2)h2.textContent=school;
+  _applySchoolInfo();
   toast('✅ Khởi tạo thành công!','ok');
 }
 function resetSystem(){
@@ -2261,7 +2304,7 @@ function parseImport(rows){var start=rows[0]&&isNaN(parseInt(rows[0][0]))?1:0;im
 function confirmImport(){if(!importData.length)return;SB.length=0;importData.forEach(function(s){SB.push(s);});try{localStorage.setItem('_students',JSON.stringify(SB));}catch(e){}merge();rebuildDynamic();hsFil();updS();updP();toast('✅ Cập nhật '+importData.length+' HS','ok');if(GAS){loader('Upload...');var CHUNK=50,i=0;function next(){if(i>=importData.length){loader();toast('☁️ Upload xong!','ok');return;}T('ldr-t').textContent='Upload '+Math.min(i+CHUNK,importData.length)+'/'+importData.length+'...';gasPost({action:'saveStudentsBatch',batch:importData.slice(i,i+CHUNK)}).then(function(){i+=CHUNK;next();}).catch(function(e){loader();toast('⚠️ '+e.message,'warn');});}next();}importData=[];}
 
 // CÀI ĐẶT
-function saveSchoolInfo(){var n=T('imp-school').value.trim(),a=T('imp-addr').value.trim();if(n)localStorage.setItem('school_name_full',n);if(a)localStorage.setItem('school_addr',a);toast('✅ Đã lưu','ok');}
+function saveSchoolInfo(){var n=T('imp-school').value.trim(),a=T('imp-addr').value.trim();if(n)localStorage.setItem('school_name_full',n);if(a)localStorage.setItem('school_addr',a);_applySchoolInfo();toast('✅ Đã lưu','ok');}
 function testConn(){if(!GAS){toast('⚠️ Chưa có GAS','warn');return;}loader('Kiểm tra...');gasCall({action:'ping'}).then(function(r){loader();var el=T('conn-res');if(el)el.innerHTML=r.ok?'<div class="ib green"><strong>✅ Kết nối OK</strong><p>Version: '+r.version+' · '+r.time+'</p></div>':'<div class="ib warn"><strong>❌ '+r.error+'</strong></div>';T('sett-status').innerHTML=r.ok?'<span style="color:var(--gd)">✅ OK v'+r.version+'</span>':'<span style="color:var(--r)">❌ Lỗi</span>';sUI(r.ok?'ok':'err');}).catch(function(e){loader();T('sett-status').innerHTML='<span style="color:var(--r)">❌ '+e.message+'</span>';sUI('err');});}
 function fixSheetsStructure(){if(!GAS){toast('⚠️ Chưa có GAS','warn');return;}loader('Sửa...');gasPost({action:'fixDiemSheet'}).then(function(r){loader();toast(r.ok?'✅ '+r.message:'❌ '+r.error,r.ok?'ok':'err');}).catch(function(e){loader();toast('❌ '+e.message,'err');});}
 function upStudents(){if(!GAS){toast('⚠️ Chưa có GAS','warn');return;}if(!confirm('Upload '+SB.length+' HS?'))return;loader('Upload...');var CHUNK=50,i=0;function next(){if(i>=SB.length){loader();toast('☁️ Upload xong!','ok');return;}T('ldr-t').textContent='Upload '+Math.min(i+CHUNK,SB.length)+'/'+SB.length+'...';gasPost({action:'saveStudentsBatch',batch:SB.slice(i,i+CHUNK)}).then(function(){i+=CHUNK;next();}).catch(function(e){loader();toast('❌ '+e.message,'err');});}next();}
@@ -2490,13 +2533,13 @@ function _dl(blob,name){var a=document.createElement('a');a.href=URL.createObjec
 
 function hbExportWord(){
   var lop=T('hb-lop').value;if(!lop){toast('⚠️ Chọn lớp','warn');return;}
-  var school=localStorage.getItem('school_name_full')||'Trường Tiểu học Diễn Liên';
+  var school=localStorage.getItem('school_name_full')||'(Chưa cấu hình tên trường)';
   var list=hbFiltered;if(!list.length){toast('⚠️ Không có HS','warn');return;}
   var html='';
   list.forEach(function(s,idx){
     var g=grades[s.ma]||{},kq=cTT(s.ma,s.khoi),nx=nhanXet[s.ma]||{},k=String(s.khoi),sj=SUBJ[k]||SUBJ['1'];
     if(idx>0)html+='<br clear="all" style="page-break-before:always">';
-    html+='<p style="text-align:center;font-size:11pt">Trường: '+school+' &nbsp;&nbsp;&nbsp; Năm học 2025-2026</p>';
+    html+='<p style="text-align:center;font-size:11pt">Trường: '+school+' &nbsp;&nbsp;&nbsp; Năm học '+(localStorage.getItem('school_year')||'____–____')+'</p>';
     html+='<p><b>Họ và tên:</b> '+s.ten+' &nbsp; <b>Lớp:</b> '+s.lop+'</p>';
     html+='<p><b>Chiều cao:</b> '+(nx.chieu_cao||'...')+' cm &nbsp; <b>Cân nặng:</b> '+(nx.can_nang||'...')+' kg</p>';
     html+='<p><b>Nghỉ có phép:</b> '+(nx.nghi_phep||'0')+' &nbsp; <b>Nghỉ không phép:</b> '+(nx.nghi_kphep||'0')+'</p>';
@@ -2551,9 +2594,9 @@ function hbExportExcel(){
 
 // BẢNG CHẤT LƯỢNG WORD
 function expBangCLWord(){
-  var school=localStorage.getItem('school_name_full')||'Trường Tiểu học Diễn Liên';
+  var school=localStorage.getItem('school_name_full')||'(Chưa cấu hình tên trường)';
   var lopSet={};allS.forEach(function(s){lopSet[s.lop]=1;});var lops=Object.keys(lopSet).sort();
-  var html='<h2>'+school.toUpperCase()+'</h2><h2>BẢNG TỔNG HỢP CHẤT LƯỢNG GIÁO DỤC</h2><h3>Năm học 2025–2026</h3>';
+  var html='<h2>'+school.toUpperCase()+'</h2><h2>BẢNG TỔNG HỢP CHẤT LƯỢNG GIÁO DỤC</h2><h3>Năm học '+(localStorage.getItem('school_year')||'____–____')+'</h3>';
   html+='<table><tr><th>Lớp</th><th>SS</th><th>Đã nhập</th><th>HT XS</th><th>HT Tốt</th><th>HT</th><th>Chưa HT</th><th>%HT</th><th>Khen XS</th><th>Khen TB</th><th>Lên lớp</th></tr>';
   var totR={tot:0,nhap:0,htxs:0,htt:0,ht:0,cht:0,xs:0,tb:0,ll:0};
   lops.forEach(function(lop){
@@ -2573,8 +2616,7 @@ function expBangCLWord(){
 window.addEventListener('load',function(){
   // V3: Setup check
   if(!localStorage.getItem('_setup_done')){T('setup-screen').style.display='block';if(DEFAULT_GAS)T('setup-gas').value=DEFAULT_GAS;return;}
-  var savedSchool=localStorage.getItem('school_name_full');
-  if(savedSchool){var _h=document.querySelector('.lbox h2');if(_h)_h.textContent=savedSchool;var _sb=document.querySelector('.sb-brand h1');if(_sb)_sb.textContent=savedSchool.replace(/^Trường Tiểu học\s*/i,'TH ');}
+  _applySchoolInfo();
   // V2.0: Xóa cache URL cũ nếu DEFAULT_GAS đã thay đổi
   var cachedGAS=localStorage.getItem('gas_url');
   if(cachedGAS&&DEFAULT_GAS&&cachedGAS!==DEFAULT_GAS){localStorage.setItem('gas_url',DEFAULT_GAS);GAS=DEFAULT_GAS;}
