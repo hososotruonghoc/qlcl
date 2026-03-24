@@ -736,13 +736,30 @@ function submitRegister() {
   if (!school || !email) { msg.style.display='block'; msg.style.background='#fef3c7'; msg.style.color='#92400e'; msg.textContent='⚠️ Vui lòng nhập tên trường và email'; return; }
   var btn = document.getElementById('reg-btn');
   btn.disabled = true; btn.textContent = '⏳ Đang gửi...';
-  // Gửi email thông báo qua Google Form hoặc API
-  // Hiện tại: hiển thị thành công
-  setTimeout(function() {
-    btn.disabled = false; btn.textContent = '📩 Gửi đăng ký';
-    msg.style.display = 'block'; msg.style.background = '#dcfce7'; msg.style.color = '#15803d';
-    msg.innerHTML = '✅ <strong>Đã gửi đăng ký!</strong><br>Trường: ' + school + '<br>Email: ' + email + '<br><br>Quản trị viên sẽ liên hệ bạn sớm nhất.<br>Zalo: <strong>0913 031 073</strong>';
-  }, 1000);
+  // Gửi đến Google Sheets qua Apps Script API
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbxK460cckYJpBbsJzSAc0aLvgsITM1TeyilNTiq5gOvI1K_62vjlBb0P-a7pGqP4CMH/exec';
+  fetch(GAS_URL + '?' + new URLSearchParams({
+    action: 'registerSchool',
+    school_name: school,
+    email: email,
+    contact_name: name
+  }).toString(), {method:'GET', redirect:'follow'})
+    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      btn.disabled = false; btn.textContent = '📩 Gửi đăng ký';
+      if (r.ok) {
+        msg.style.display = 'block'; msg.style.background = '#dcfce7'; msg.style.color = '#15803d';
+        msg.innerHTML = '✅ <strong>Đã gửi đăng ký thành công!</strong><br>Trường: ' + school + '<br>Email: ' + email + '<br><br>Quản trị viên sẽ liên hệ bạn sớm nhất.<br>Zalo: <strong>0913 031 073</strong>';
+      } else {
+        msg.style.display = 'block'; msg.style.background = '#fef3c7'; msg.style.color = '#92400e';
+        msg.textContent = '⚠️ ' + (r.error || 'Lỗi không xác định');
+      }
+    })
+    .catch(function(e) {
+      btn.disabled = false; btn.textContent = '📩 Gửi đăng ký';
+      msg.style.display = 'block'; msg.style.background = '#ffe4e6'; msg.style.color = '#be123c';
+      msg.textContent = '❌ Không kết nối được. Vui lòng liên hệ Zalo: 0913 031 073';
+    });
 }
 </script>
 </body>
