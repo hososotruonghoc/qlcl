@@ -434,6 +434,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     </div>
     <div class="sb-section ao">
       <div class="sb-section-title">Quản trị hệ thống</div>
+      <div class="sb-item ao" onclick="gp('pg-classes',this)"><span class="ico">🏫</span><span>Quản lý lớp</span></div>
       <div class="sb-item ao" onclick="gp('pg-users',this)"><span class="ico">👥</span><span>Phân quyền CBGV</span></div>
       <div class="sb-item ao" onclick="gp('pg-import',this)"><span class="ico">📥</span><span>Nhập danh sách HS</span></div>
       <div class="sb-item ao" onclick="gp('pg-settings',this)"><span class="ico">⚙️</span><span>Cài đặt hệ thống</span></div>
@@ -599,6 +600,43 @@ body:not(.is-gvbm) .gv-only{display:none!important}
   </div></div>
 </div>
 
+
+<!-- QUẢN LÝ LỚP -->
+<div class="page ao" id="pg-classes">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+    <h2 style="font-size:16px;color:var(--navy);font-family:'Playfair Display',serif">Quản lý danh sách lớp</h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn bout" onclick="dlMauLop()">📥 Tải mẫu Excel</button>
+      <button class="btn bg" onclick="T('cls-file').click()">📂 Nhập lớp từ Excel</button>
+      <input type="file" id="cls-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importClassFile(this)">
+      <button class="btn bp" onclick="openClsModal(null)">➕ Thêm lớp</button>
+    </div>
+  </div>
+  <div class="ib blue"><strong>💡 Hướng dẫn</strong><p>Tạo lớp trước, sau đó nhập học sinh vào lớp. Khi nhập HS từ Excel, lớp chưa tồn tại sẽ được tự động tạo.</p></div>
+  <div id="cls-empty" style="display:none"><div class="empty"><div class="ei">🏫</div><p>Chưa có lớp nào. Nhấn <b>➕ Thêm lớp</b> hoặc <b>📂 Nhập từ Excel</b>.</p></div></div>
+  <div class="tw" id="cls-tbl" style="display:none"><div class="ts">
+    <table><thead><tr><th>#</th><th>Tên lớp</th><th>Khối</th><th>Sĩ số</th><th>Đã nhập điểm</th><th>Ngày tạo</th><th class="c">Thao tác</th></tr></thead>
+    <tbody id="cls-tb"></tbody></table>
+  </div></div>
+</div>
+
+<!-- Modal thêm/sửa lớp -->
+<div class="mbg" id="clsBg">
+<div class="mbox sm">
+  <div class="mhd"><div><h2 id="clsTitle">➕ Thêm lớp</h2></div><button class="mcl" onclick="cm('clsBg')">✕</button></div>
+  <div class="mbd">
+    <div class="uf">
+      <div class="ufi"><label>Tên lớp *</label><input type="text" id="cls-name" placeholder="VD: 1A, 2B, 3C..." style="text-transform:uppercase"></div>
+      <div class="ufi"><label>Khối (tự nhận)</label><input type="text" id="cls-khoi" placeholder="Tự động từ tên lớp" readonly style="background:#f1f5f9"></div>
+    </div>
+  </div>
+  <div class="mft">
+    <div class="mft-l" id="clsErr" style="color:var(--rose)"></div>
+    <div class="mft-r"><button class="btn bout" onclick="cm('clsBg')">Hủy</button><button class="btn bp" onclick="saveCls()">💾 Lưu</button></div>
+  </div>
+</div>
+</div>
+
 <!-- NHẬP HS -->
 <div class="page ao" id="pg-import">
   <div style="max-width:620px">
@@ -742,6 +780,8 @@ var PC   = JSON.parse(document.getElementById('_d_pc').textContent);
 
 // STATE
 var GAS='',CU=null,grades={},allS=[],hsF=[],dF=[];
+var CLASSES=[]; // [{name:'1A',khoi:1,created_at:'...'}]
+try{CLASSES=JSON.parse(localStorage.getItem('_classes')||'[]');}catch(e){CLASSES=[];}
 var hsP=1,dP=1,curK=1,tkKF=0,eIdx=null,ch1=null,ch2=null;
 var userPerm=null,importData=[],allUsers=[];
 var _dt={},PZ=30;
@@ -871,7 +911,12 @@ function switchPeriod(pid){
   // Update UI
   document.querySelectorAll('.period-btn').forEach(function(b){b.classList.toggle('on',b.dataset.pid===pid);});
   T('cur-period-label').textContent=PERIODS.find(function(p){return p.id===pid;}).name;
-  merge();updateAll();
+  // Load classes from Sheets
+    if(rC&&rC.ok&&rC.data&&rC.data.length){
+      rC.data.forEach(function(cl){if(!CLASSES.some(function(x){return x.name===cl.name;}))CLASSES.push(cl);});
+      _saveClasses();
+    }
+    merge();updateAll();
   if(GAS)syncNow(true);
   toast('📅 Chuyển sang: '+PERIODS.find(function(p){return p.id===pid;}).name,'ok');
 }
@@ -883,9 +928,10 @@ function syncNow(silent){
   // V2: load grades + nhận xét cùng lúc
   Promise.all([
     gasCall({action:'getGrades'}),
-    gasCall({action:'getNhanXet'}).catch(function(){return{ok:true,data:{}};})
+    gasCall({action:'getNhanXet'}).catch(function(){return{ok:true,data:{}};}),
+    gasCall({action:'getClasses'}).catch(function(){return{ok:true,data:[]};})
   ]).then(function(results){
-    var rG=results[0], rN=results[1];
+    var rG=results[0], rN=results[1], rC=results[2];
     if(rG.ok){
       var remote=rG.data||{};
       Object.keys(remote).forEach(function(k){grades[k]=remote[k];});
@@ -910,22 +956,35 @@ function syncNow(silent){
 
 // ═══ V3 DYNAMIC: Utility functions ═══
 function _getKhois(){
-  var set={};SB.forEach(function(s){if(s.khoi)set[s.khoi]=1;else if(s.lop){var k=parseInt(s.lop);if(k)set[k]=1;}});
-  return Object.keys(set).map(Number).sort();
+  var set={};
+  CLASSES.forEach(function(cl){set[cl.khoi||parseInt(cl.name)]=1;});
+  SB.forEach(function(s){if(s.khoi)set[s.khoi]=1;else if(s.lop){var k=parseInt(s.lop);if(k)set[k]=1;}});
+  return Object.keys(set).map(Number).filter(function(n){return n>0;}).sort();
 }
 function _getLops(){
-  var set={};SB.forEach(function(s){if(s.lop)set[s.lop]=1;});
+  var set={};
+  CLASSES.forEach(function(cl){set[cl.name]=1;});
+  SB.forEach(function(s){if(s.lop)set[s.lop]=1;});
   return Object.keys(set).sort(function(a,b){var ka=parseInt(a),kb=parseInt(b);return ka!==kb?ka-kb:a.localeCompare(b);});
 }
 function _getLopsByKhoi(k){
   return _getLops().filter(function(lop){return parseInt(lop)===k;});
+}
+function _ensureClass(name){
+  name=String(name||'').trim().toUpperCase();if(!name)return;
+  if(CLASSES.some(function(cl){return cl.name===name;}))return;
+  CLASSES.push({name:name,khoi:parseInt(name)||0,created_at:new Date().toLocaleString('vi-VN')});
+  _saveClasses();
+}
+function _saveClasses(){
+  try{localStorage.setItem('_classes',JSON.stringify(CLASSES));}catch(e){}
 }
 function rebuildDynamic(){
   // Rebuild khối tabs cho Nhập điểm
   var khois=_getKhois();
   var diemKts=T('diem-kts');
   if(diemKts){
-    if(!khois.length){diemKts.innerHTML='<div style="padding:8px 12px;font-size:12px;color:var(--slate3)">Chưa có dữ liệu. Hãy nhập học sinh trước.</div>';}
+    if(!khois.length){diemKts.innerHTML='<div style="padding:8px 12px;font-size:12px;color:var(--slate3)">Chưa có lớp. Vui lòng tạo lớp trước.</div>';}
     else{var h='';khois.forEach(function(k,i){h+='<div class="kt k'+k+(i===0?' on':'')+'" data-k="'+k+'" onclick="dK('+k+',this)">Khối '+k+'</div>';});diemKts.innerHTML=h;}
   }
   // Rebuild khối tabs cho Thống kê
@@ -1006,6 +1065,92 @@ function resetSystem(){
   toast('🔄 Đã reset. Tải lại...','ok');setTimeout(function(){location.reload();},800);
 }
 
+
+// ═══ V3: CLASS MANAGEMENT ═══
+var _clsEditIdx=null;
+function renderClasses(){
+  if(!CLASSES.length){T('cls-empty').style.display='block';T('cls-tbl').style.display='none';return;}
+  T('cls-empty').style.display='none';T('cls-tbl').style.display='block';
+  var lops=CLASSES.slice().sort(function(a,b){return(a.khoi-b.khoi)||a.name.localeCompare(b.name);});
+  T('cls-tb').innerHTML=lops.map(function(cl,i){
+    var count=SB.filter(function(s){return s.lop===cl.name;}).length;
+    var done=SB.filter(function(s){return s.lop===cl.name&&isDone(s);}).length;
+    return '<tr><td>'+(i+1)+'</td><td><span class="bl bl-lop" style="font-size:12px;font-weight:700">'+cl.name+'</span></td><td>Khối '+cl.khoi+'</td><td class="c">'+count+'</td><td class="c">'+(count?done+'/'+count:'—')+'</td><td style="font-size:11px;color:var(--slate3)">'+(cl.created_at||'—')+'</td><td class="c">'+(count===0?'<button class="abtn ad" onclick="delCls('+i+')">🗑</button>':'<span style="font-size:10px;color:var(--slate4)">Có HS</span>')+'</td></tr>';
+  }).join('');
+}
+
+function openClsModal(idx){
+  _clsEditIdx=idx;
+  var cl=idx!==null?CLASSES[idx]:null;
+  T('clsTitle').textContent=cl?'✏️ Sửa lớp '+cl.name:'➕ Thêm lớp';
+  T('cls-name').value=cl?cl.name:'';
+  T('cls-name').disabled=!!cl;
+  T('cls-khoi').value=cl?'Khối '+cl.khoi:'';
+  T('clsErr').textContent='';
+  T('clsBg').classList.add('on');
+  // Auto-detect khoi on input
+  T('cls-name').oninput=function(){var v=this.value.trim().toUpperCase();this.value=v;var k=parseInt(v);T('cls-khoi').value=k?'Khối '+k:'';};
+}
+
+function saveCls(){
+  var name=T('cls-name').value.trim().toUpperCase();
+  if(!name){T('clsErr').textContent='⚠️ Nhập tên lớp';return;}
+  var khoi=parseInt(name);
+  if(!khoi){T('clsErr').textContent='⚠️ Tên lớp phải bắt đầu bằng số (VD: 1A, 2B)';return;}
+  // Check duplicate
+  if(_clsEditIdx===null&&CLASSES.some(function(cl){return cl.name===name;})){T('clsErr').textContent='❌ Lớp '+name+' đã tồn tại';return;}
+  if(_clsEditIdx!==null){
+    CLASSES[_clsEditIdx].khoi=khoi;
+  }else{
+    CLASSES.push({name:name,khoi:khoi,created_at:new Date().toLocaleString('vi-VN')});
+  }
+  _saveClasses();
+  cm('clsBg');renderClasses();rebuildDynamic();
+  toast('✅ '+(_clsEditIdx!==null?'Cập nhật':'Tạo')+' lớp '+name,'ok');
+  // Sync to Sheets
+  if(GAS)gasPost({action:'saveClassesBatch',classes:CLASSES}).catch(function(){});
+}
+
+function delCls(idx){
+  var cl=CLASSES[idx];if(!cl)return;
+  var count=SB.filter(function(s){return s.lop===cl.name;}).length;
+  if(count>0){toast('❌ Lớp '+cl.name+' có '+count+' HS, không xóa được','err');return;}
+  if(!confirm('Xóa lớp '+cl.name+'?'))return;
+  CLASSES.splice(idx,1);_saveClasses();
+  renderClasses();rebuildDynamic();toast('🗑 Đã xóa lớp '+cl.name,'ok');
+  if(GAS)gasPost({action:'saveClassesBatch',classes:CLASSES}).catch(function(){});
+}
+
+function dlMauLop(){
+  var ws=XLSX.utils.aoa_to_sheet([['Tên lớp'],['1A'],['1B'],['2A'],['2B'],['3A']]);
+  ws['!cols']=[{wch:12}];
+  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'DanhSachLop');
+  XLSX.writeFile(wb,'Mau_DanhSachLop.xlsx');
+  toast('📥 Đã tải mẫu danh sách lớp','ok');
+}
+
+function importClassFile(inp){
+  if(!inp.files.length)return;
+  var r=new FileReader();r.onload=function(e){
+    try{
+      var wb=XLSX.read(e.target.result,{type:'array'});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      var added=0,dup=0;
+      raw.forEach(function(row){
+        var name=String(row[0]||'').trim().toUpperCase();
+        if(!name||name==='TÊN LỚP'||name==='LỚP'||!parseInt(name))return;
+        if(CLASSES.some(function(cl){return cl.name===name;})){dup++;return;}
+        CLASSES.push({name:name,khoi:parseInt(name),created_at:new Date().toLocaleString('vi-VN')});
+        added++;
+      });
+      _saveClasses();renderClasses();rebuildDynamic();
+      toast('✅ Thêm '+added+' lớp'+(dup?' ('+dup+' trùng)':''),'ok');
+      if(GAS)gasPost({action:'saveClassesBatch',classes:CLASSES}).catch(function(){});
+    }catch(err){toast('❌ '+err.message,'err');}
+  };r.readAsArrayBuffer(inp.files[0]);inp.value='';
+}
+
 function initApp(){
   GAS=localStorage.getItem('gas_url')||DEFAULT_GAS||'';
   try{allGrades=JSON.parse(localStorage.getItem('_allGrades')||'{}');}catch(e){allGrades={};}
@@ -1014,7 +1159,8 @@ function initApp(){
   try{var oldG=JSON.parse(localStorage.getItem('_grades')||'{}');if(Object.keys(oldG).length&&!Object.keys(allGrades.cn||{}).length){allGrades.cn=oldG;}}catch(e){}
   grades=allGrades[curPeriod]||{};
   try{nhanXet=JSON.parse(localStorage.getItem('_nhanxet')||'{}');}catch(e){nhanXet={};}
-  merge();rebuildDynamic();
+  try{CLASSES=JSON.parse(localStorage.getItem('_classes')||'[]');}catch(e){CLASSES=[];}
+  merge();rebuildDynamic();renderClasses();
   hsFil();updS();updP();renderSt();renderTK(0);
   var st=T('sett-status');
   if(st)st.innerHTML=GAS?'<span style="color:var(--gd)">✅ Đã cấu hình</span>':'<span style="color:var(--r)">❌ Chưa có GAS URL</span>';
@@ -1023,7 +1169,8 @@ function initApp(){
 }
 
 function merge(){allS=SB.map(function(s){return Object.assign({},s,grades[s.ma]||{});});}
-function updateAll(){merge();rebuildDynamic();dFil();allGrades[curPeriod]=grades;try{localStorage.setItem('_allGrades',JSON.stringify(allGrades));}catch(e){}}
+function updateAll(){try{CLASSES=JSON.parse(localStorage.getItem('_classes')||'[]');}catch(e){CLASSES=[];}
+  merge();rebuildDynamic();renderClasses();dFil();allGrades[curPeriod]=grades;try{localStorage.setItem('_allGrades',JSON.stringify(allGrades));}catch(e){}}
 function updS(){var d=allS.filter(isDone).length;T('c-nhap').textContent=d;T('c-chua').textContent=SB.length-d;T('c-tot').textContent=SB.length;T('c-nam').textContent=SB.filter(function(s){return s.gt==='Nam';}).length;T('c-nu').textContent=SB.filter(function(s){return s.gt==='Nữ';}).length;}
 function updP(){var d=allS.filter(isDone).length,p=SB.length?Math.round(d/SB.length*100):0;if(T('s-prog'))T('s-prog').textContent=d+'/'+SB.length;if(T('s-pb'))T('s-pb').style.width=p+'%';if(T('s-pct'))T('s-pct').textContent=p+'%';if(T('sb-tot'))T('sb-tot').textContent=SB.length;}
 
@@ -1044,7 +1191,7 @@ function jumpLop(lop){var k=parseInt(lop);gp('pg-diem');dK(k);T('d-lop').value=l
 function gp(id,el){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});T(id).classList.add('on');
   document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('on');});if(el)el.classList.add('on');
-  if(id==='pg-status')renderSt();if(id==='pg-tk')renderTK(tkKF);if(id==='pg-users')loadUsers();
+  if(id==='pg-status')renderSt();if(id==='pg-tk')renderTK(tkKF);if(id==='pg-users')loadUsers();if(id==='pg-classes')renderClasses();if(id==='pg-classes')renderClasses();
   if(id==='pg-hocba')hbFil();
   if((id==='pg-diem'||id==='pg-hs')&&GAS)syncNow(true);
 }
@@ -2301,7 +2448,8 @@ function onDrop(ev){ev.preventDefault();T('drop-zone').classList.remove('drag');
 function onFileChange(inp){if(inp.files.length)processFile(inp.files[0]);}
 function processFile(file){if(file.size>5*1024*1024){toast('❌ File quá lớn','err');return;}loader('Đọc file...');var r=new FileReader();r.onload=function(e){try{loader();var wb=XLSX.read(e.target.result,{type:'array'});var ws=wb.Sheets[wb.SheetNames[0]];var raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});parseImport(raw);}catch(err){loader();toast('❌ '+err.message,'err');}};r.readAsArrayBuffer(file);}
 function parseImport(rows){var start=rows[0]&&isNaN(parseInt(rows[0][0]))?1:0;importData=[];rows.slice(start).forEach(function(row){var ten=row[2]?String(row[2]).trim():'';if(!ten)return;importData.push({stt:String(row[0]||''),lop:String(row[1]||'').trim().toUpperCase(),khoi:parseInt(row[1])||1,ma:String(Math.floor(1e9+Math.random()*9e9)),ten:ten,ns:String(row[3]||''),gt:String(row[4]||'')});});if(!importData.length){toast('❌ Không đọc được','err');return;}T('imp-preview').innerHTML='<div class="ib green"><strong>✅ '+importData.length+' HS sẵn sàng</strong><p>Nhấn Upload để lưu lên Sheets</p></div><button class="btn bp" onclick="confirmImport()">✅ Xác nhận</button>';}
-function confirmImport(){if(!importData.length)return;SB.length=0;importData.forEach(function(s){SB.push(s);});try{localStorage.setItem('_students',JSON.stringify(SB));}catch(e){}merge();rebuildDynamic();hsFil();updS();updP();toast('✅ Cập nhật '+importData.length+' HS','ok');if(GAS){loader('Upload...');var CHUNK=50,i=0;function next(){if(i>=importData.length){loader();toast('☁️ Upload xong!','ok');return;}T('ldr-t').textContent='Upload '+Math.min(i+CHUNK,importData.length)+'/'+importData.length+'...';gasPost({action:'saveStudentsBatch',batch:importData.slice(i,i+CHUNK)}).then(function(){i+=CHUNK;next();}).catch(function(e){loader();toast('⚠️ '+e.message,'warn');});}next();}importData=[];}
+function confirmImport(){if(!importData.length)return;SB.length=0;importData.forEach(function(s){SB.push(s);_ensureClass(s.lop);});try{localStorage.setItem('_students',JSON.stringify(SB));}catch(e){}try{CLASSES=JSON.parse(localStorage.getItem('_classes')||'[]');}catch(e){CLASSES=[];}
+  merge();rebuildDynamic();renderClasses();hsFil();updS();updP();toast('✅ Cập nhật '+importData.length+' HS','ok');if(GAS){loader('Upload...');var CHUNK=50,i=0;function next(){if(i>=importData.length){loader();toast('☁️ Upload xong!','ok');return;}T('ldr-t').textContent='Upload '+Math.min(i+CHUNK,importData.length)+'/'+importData.length+'...';gasPost({action:'saveStudentsBatch',batch:importData.slice(i,i+CHUNK)}).then(function(){i+=CHUNK;next();}).catch(function(e){loader();toast('⚠️ '+e.message,'warn');});}next();}importData=[];}
 
 // CÀI ĐẶT
 function saveSchoolInfo(){var n=T('imp-school').value.trim(),a=T('imp-addr').value.trim();if(n)localStorage.setItem('school_name_full',n);if(a)localStorage.setItem('school_addr',a);_applySchoolInfo();toast('✅ Đã lưu','ok');}
@@ -2645,7 +2793,7 @@ gp=function(id,el){
   var titles={
     'pg-hs':'Học sinh','pg-diem':'Nhập kết quả đánh giá','pg-hocba':'Học bạ số',
     'pg-status':'Trạng thái nhập liệu','pg-tk':'Thống kê chất lượng',
-    'pg-export':'Trích xuất dữ liệu','pg-users':'Phân quyền CBGV',
+    'pg-export':'Trích xuất dữ liệu','pg-classes':'Quản lý lớp','pg-users':'Phân quyền CBGV',
     'pg-import':'Nhập danh sách học sinh','pg-settings':'Cài đặt hệ thống'
   };
   if(T('page-title'))T('page-title').textContent=titles[id]||'';
