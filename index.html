@@ -356,6 +356,30 @@ body:not(.is-gvbm) .gv-only{display:none!important}
 <div class="toast" id="toast"></div>
 
 
+
+<!-- ═══ GATE — KIỂM TRA QUYỀN TRUY CẬP ═══ -->
+<div id="gate-screen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1e40af 100%);z-index:10001;overflow:auto">
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px">
+<div id="gate-box" style="background:white;border-radius:20px;padding:44px;width:100%;max-width:440px;box-shadow:0 25px 80px rgba(0,0,0,.3);animation:slideUp .5s ease-out">
+  <div style="text-align:center;margin-bottom:28px">
+    <div style="width:72px;height:72px;background:linear-gradient(135deg,#3b82f6,#10b981);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:14px;box-shadow:0 10px 30px rgba(37,99,235,.3)">🔐</div>
+    <h2 style="font-size:22px;font-weight:800;color:#1e293b;letter-spacing:.5px">Xác thực truy cập</h2>
+    <p style="font-size:13px;color:#64748b;margin-top:6px">Hệ thống Quản lý Chất lượng Giáo dục Tiểu học</p>
+  </div>
+  <div id="gate-form">
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Email đăng ký *</label>
+      <input type="email" id="gate-email" placeholder="email@gmail.com" style="width:100%;height:48px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:15px;outline:none;background:#f8fafc;font-family:inherit;transition:border .2s" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" onkeydown="if(event.key==='Enter')checkGateAccess()">
+    </div>
+    <button onclick="checkGateAccess()" id="gate-btn" style="width:100%;height:48px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s">🔑 Kiểm tra quyền truy cập</button>
+  </div>
+  <div id="gate-status" style="display:none;text-align:center;padding:20px 0"></div>
+  <div id="gate-err" style="display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:13px"></div>
+  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:20px;line-height:1.6">Hệ thống chỉ dành cho đơn vị đã được phê duyệt.<br>Liên hệ quản trị viên để đăng ký.</p>
+</div>
+</div>
+</div>
+
 <div id="setup-screen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#e0e7ff 0%,#dbeafe 30%,#f0fdf4 70%,#fef3c7 100%);z-index:10000;overflow:auto">
 <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px">
 <div style="background:white;border-radius:20px;padding:40px 44px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(30,64,175,.12)">
@@ -1008,6 +1032,84 @@ function rebuildDynamic(){
 
 // Setup + Reset
 
+
+// ═══ V3: ACCESS GATE SYSTEM ═══
+function checkGateAccess(){
+  var email=T('gate-email').value.trim().toLowerCase();
+  if(!email||email.indexOf('@')<0){_gateErr('⚠️ Vui lòng nhập email hợp lệ','warn');return;}
+  var btn=T('gate-btn');btn.disabled=true;btn.textContent='⏳ Đang kiểm tra...';
+  T('gate-err').style.display='none';
+  var url=GATE_URL||GAS||DEFAULT_GAS;
+  if(!url){_gateErr('❌ Chưa cấu hình URL hệ thống','err');btn.disabled=false;btn.textContent='🔑 Kiểm tra quyền truy cập';return;}
+  fetch(url+'?'+new URLSearchParams({action:'checkAccess',email:email}).toString(),{method:'GET',redirect:'follow'})
+    .then(function(r){return r.json();})
+    .then(function(r){
+      btn.disabled=false;btn.textContent='🔑 Kiểm tra quyền truy cập';
+      if(!r.ok){_gateErr('❌ '+(r.error||'Lỗi không xác định'),'err');return;}
+      if(r.status==='approved'){
+        // Lưu thông tin gate
+        localStorage.setItem('_gate_email',email);
+        localStorage.setItem('_gate_status','approved');
+        localStorage.setItem('_gate_school',r.school_name||'');
+        if(r.gas_url){localStorage.setItem('gas_url',r.gas_url);GAS=r.gas_url;DEFAULT_GAS=r.gas_url;}
+        // Hiệu ứng success
+        T('gate-form').style.display='none';
+        T('gate-status').style.display='block';
+        T('gate-status').innerHTML='<div style="font-size:48px;margin-bottom:12px">✅</div><h3 style="color:#15803d;font-size:18px;font-weight:700">Đã xác thực!</h3><p style="color:#64748b;font-size:13px;margin-top:6px">'+(r.school_name||email)+'</p>';
+        setTimeout(function(){
+          T('gate-screen').style.display='none';
+          _afterGateApproved();
+        },1500);
+      }else if(r.status==='pending'){
+        _gateShow('pending',r.school_name);
+      }else{
+        _gateErr('❌ Email chưa được đăng ký trong hệ thống.<br>Liên hệ quản trị viên để được cấp quyền.','err');
+      }
+    })
+    .catch(function(e){
+      btn.disabled=false;btn.textContent='🔑 Kiểm tra quyền truy cập';
+      _gateErr('❌ Không kết nối được: '+e.message,'err');
+    });
+}
+
+function _gateErr(msg,type){
+  var el=T('gate-err');el.style.display='block';el.innerHTML=msg;
+  el.style.background=type==='warn'?'#fef3c7':type==='err'?'#ffe4e6':'#dbeafe';
+  el.style.color=type==='warn'?'#92400e':type==='err'?'#be123c':'#1e40af';
+  el.style.borderLeft='4px solid '+(type==='warn'?'#f59e0b':type==='err'?'#f43f5e':'#3b82f6');
+}
+
+function _gateShow(status,school){
+  T('gate-form').style.display='none';
+  T('gate-status').style.display='block';
+  if(status==='pending'){
+    T('gate-status').innerHTML='<div style="font-size:48px;margin-bottom:12px">⏳</div><h3 style="color:#b45309;font-size:18px;font-weight:700">Đang chờ phê duyệt</h3><p style="color:#64748b;font-size:13px;margin-top:8px;line-height:1.6">'+(school?'Đơn vị: <strong>'+school+'</strong><br>':'')+'Quản trị viên sẽ duyệt yêu cầu của bạn.<br>Vui lòng thử lại sau.</p><button onclick="location.reload()" style="margin-top:16px;padding:10px 24px;background:#f59e0b;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">🔄 Thử lại</button>';
+  }
+}
+
+function _afterGateApproved(){
+  // Tiếp tục luồng bình thường: setup → login
+  if(!localStorage.getItem('_setup_done')){
+    T('setup-screen').style.display='block';
+    // Pre-fill tên trường từ gate
+    var gateSchool=localStorage.getItem('_gate_school');
+    if(gateSchool&&T('setup-school'))T('setup-school').value=gateSchool;
+    if(GAS&&T('setup-gas'))T('setup-gas').value=GAS;
+    return;
+  }
+  _applySchoolInfo();
+  _restoreSession();
+}
+
+function _restoreSession(){
+  var cachedGAS=localStorage.getItem('gas_url');
+  if(cachedGAS&&DEFAULT_GAS&&cachedGAS!==DEFAULT_GAS){localStorage.setItem('gas_url',DEFAULT_GAS);GAS=DEFAULT_GAS;}
+  var urlP=new URLSearchParams(window.location.search),gasP=urlP.get('gas');
+  if(gasP&&gasP.indexOf('script.google.com')>=0){localStorage.setItem('gas_url',gasP);DEFAULT_GAS=gasP;GAS=gasP;window.history.replaceState({},'',window.location.href.split('?')[0]);}
+  var cu=localStorage.getItem('_cu');
+  if(cu){try{var p=JSON.parse(cu);if(p&&p.username){CU=p;loginOK();return;}}catch(e){localStorage.removeItem('_cu');}}
+}
+
 // ═══ V3: Dynamic school info ═══
 function _applySchoolInfo(){
   var school=localStorage.getItem('school_name_full')||'';
@@ -1061,7 +1163,7 @@ function doSetup(){
 }
 function resetSystem(){
   if(!confirm('⚠️ XÓA DỮ LIỆU TRÊN MÁY?\n\n• Xóa cache điểm, HS, nhận xét\n• KHÔNG ảnh hưởng Google Sheets\n\nChắc chắn?'))return;
-  localStorage.clear();SB.length=0;allS=[];grades={};allGrades={};nhanXet={};
+  localStorage.clear();SB.length=0;allS=[];grades={};allGrades={};nhanXet={};CLASSES=[];
   toast('🔄 Đã reset. Tải lại...','ok');setTimeout(function(){location.reload();},800);
 }
 
@@ -2762,17 +2864,28 @@ function expBangCLWord(){
 
 // AUTO-LOGIN
 window.addEventListener('load',function(){
-  // V3: Setup check
-  if(!localStorage.getItem('_setup_done')){T('setup-screen').style.display='block';if(DEFAULT_GAS)T('setup-gas').value=DEFAULT_GAS;return;}
-  _applySchoolInfo();
-  // V2.0: Xóa cache URL cũ nếu DEFAULT_GAS đã thay đổi
-  var cachedGAS=localStorage.getItem('gas_url');
-  if(cachedGAS&&DEFAULT_GAS&&cachedGAS!==DEFAULT_GAS){localStorage.setItem('gas_url',DEFAULT_GAS);GAS=DEFAULT_GAS;}
-  // Check GAS URL from query string
-  var urlP=new URLSearchParams(window.location.search),gasP=urlP.get('gas');
-  if(gasP&&gasP.indexOf('script.google.com')>=0){localStorage.setItem('gas_url',gasP);DEFAULT_GAS=gasP;GAS=gasP;window.history.replaceState({},'',window.location.href.split('?')[0]);setTimeout(function(){toast('✅ Máy đã cấu hình!','ok');},300);}
-  var cu=localStorage.getItem('_cu');
-  if(cu){try{var p=JSON.parse(cu);if(p&&p.username){CU=p;loginOK();return;}}catch(e){localStorage.removeItem('_cu');}}
+  // V3 GATE: Kiểm tra quyền truy cập trước
+  var gateStatus=localStorage.getItem('_gate_status');
+  if(gateStatus==='approved'){
+    // Đã qua gate → tiếp tục bình thường
+    var gateGAS=localStorage.getItem('gas_url');
+    if(gateGAS){GAS=gateGAS;DEFAULT_GAS=gateGAS;}
+    if(!localStorage.getItem('_setup_done')){
+      T('setup-screen').style.display='block';
+      var gs=localStorage.getItem('_gate_school');
+      if(gs&&T('setup-school')&&!T('setup-school').value)T('setup-school').value=gs;
+      if(GAS&&T('setup-gas'))T('setup-gas').value=GAS;
+      return;
+    }
+    _applySchoolInfo();
+    _restoreSession();
+  }else{
+    // Chưa qua gate → hiện gate screen
+    T('gate-screen').style.display='block';
+    // Pre-fill email nếu đã nhập trước đó
+    var savedEmail=localStorage.getItem('_gate_email');
+    if(savedEmail&&T('gate-email'))T('gate-email').value=savedEmail;
+  }
 });
 </script>
 
