@@ -356,7 +356,6 @@ body:not(.is-gvbm) .gv-only{display:none!important}
 <div class="toast" id="toast"></div>
 
 
-<!-- ═══ KHỞI TẠO HỆ THỐNG (LẦN ĐẦU) ═══ -->
 <div id="setup-screen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#e0e7ff 0%,#dbeafe 30%,#f0fdf4 70%,#fef3c7 100%);z-index:10000;overflow:auto">
 <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px">
 <div style="background:white;border-radius:20px;padding:40px 44px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(30,64,175,.12)">
@@ -365,15 +364,12 @@ body:not(.is-gvbm) .gv-only{display:none!important}
     <h2 style="font-size:20px;font-weight:800;color:#1e40af;letter-spacing:1px">KHỞI TẠO HỆ THỐNG</h2>
     <p style="font-size:12.5px;color:#64748b;margin-top:4px">Quản lý Chất lượng Giáo dục Tiểu học</p>
   </div>
-  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Tên đơn vị *</label><input type="text" id="setup-school" placeholder="Trường Tiểu học..." style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit" value=""></div>
-  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Năm học *</label><input type="text" id="setup-year" placeholder="2025-2026" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit" value="2025-2026"></div>
-  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Người quản trị</label><input type="text" id="setup-admin" placeholder="Họ tên admin" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit" value=""></div>
-  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Google Apps Script URL</label><input type="text" id="setup-gas" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:12px;outline:none;background:#f8fafc;font-family:inherit" value=""></div>
-  <button onclick="doSetup()" style="width:100%;height:48px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.3px;font-family:inherit">🚀 Khởi tạo hệ thống</button>
-  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px">Thông tin này sẽ được lưu lại. Bạn có thể thay đổi sau trong Cài đặt.</p>
-</div>
-</div>
-</div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Tên đơn vị *</label><input type="text" id="setup-school" placeholder="Trường Tiểu học..." style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Năm học</label><input type="text" id="setup-year" value="2025-2026" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 16px;font-size:14px;outline:none;background:#f8fafc;font-family:inherit"></div>
+  <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:#334155;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Google Apps Script URL</label><input type="text" id="setup-gas" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;height:46px;border:2px solid #e2e8f0;border-radius:10px;padding:0 12px;font-size:12px;outline:none;background:#f8fafc;font-family:inherit"></div>
+  <button onclick="doSetup()" style="width:100%;height:48px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🚀 Khởi tạo hệ thống</button>
+  <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:12px">Thông tin có thể thay đổi sau trong Cài đặt.</p>
+</div></div></div>
 
 <!-- ═══ ĐĂNG NHẬP ═══ -->
 <div id="login-screen">
@@ -477,7 +473,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
   </div>
   <div class="tb">
     <div class="srch"><span class="si2">🔍</span><input type="text" id="hs-q" placeholder="Tìm tên, mã HS..." oninput="debounce(hsFil,220)"></div>
-    <select id="hs-kh" onchange="hsKhoi()"><option value="">Tất cả khối</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    <select id="hs-kh" onchange="hsKhoi()"><option value="">Tất cả khối</option></select>
     <select id="hs-lop" onchange="hsFil()"><option value="">Tất cả lớp</option></select>
     <select id="hs-gt" onchange="hsFil()"><option value="">Giới tính</option><option>Nam</option><option>Nữ</option></select>
     <select id="hs-nt" onchange="hsFil()"><option value="">Trạng thái</option><option value="done">Đã nhập</option><option value="todo">Chưa nhập</option></select>
@@ -493,13 +489,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
 
 <!-- NHẬP ĐIỂM -->
 <div class="page" id="pg-diem">
-  <div class="kts" id="diem-kts">
-    <div class="kt k1 on" onclick="dK(1,this)">Khối 1</div>
-    <div class="kt k2" onclick="dK(2,this)">Khối 2</div>
-    <div class="kt k3" onclick="dK(3,this)">Khối 3</div>
-    <div class="kt k4" onclick="dK(4,this)">Khối 4</div>
-    <div class="kt k5" onclick="dK(5,this)">Khối 5</div>
-  </div>
+  <div class="kts" id="diem-kts"><!-- Dynamic khối tabs --></div>
   <div class="tb">
     <select id="d-lop" onchange="dFil()"><option value="">Tất cả lớp</option></select>
     <div class="srch"><span class="si2">🔍</span><input type="text" id="d-q" placeholder="Tìm học sinh..." oninput="debounce(dFil,220)"></div>
@@ -554,12 +544,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
   <div class="tw">
     <div style="padding:12px 16px;border-bottom:1px solid var(--slate6);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
       <strong style="font-size:14px;color:var(--navy)">Thống kê chi tiết</strong>
-      <div class="kts" style="margin:0" id="tk-kts">
-        <div class="kt on" onclick="tkK(0,this)">Toàn trường</div>
-        <div class="kt k1" onclick="tkK(1,this)">K1</div><div class="kt k2" onclick="tkK(2,this)">K2</div>
-        <div class="kt k3" onclick="tkK(3,this)">K3</div><div class="kt k4" onclick="tkK(4,this)">K4</div>
-        <div class="kt k5" onclick="tkK(5,this)">K5</div>
-      </div>
+      <div class="kts" style="margin:0" id="tk-kts"><!-- Dynamic --></div>
     </div>
     <div style="overflow-x:auto;padding:14px 16px">
       <table class="stbl"><thead><tr><th>Lớp</th><th>SS</th><th>Đã nhập</th><th>HT XS</th><th>HT Tốt</th><th>HT</th><th>Chưa HT</th><th>%HT</th><th>Khen XS</th><th>Khen TB</th><th>Lên lớp</th></tr></thead>
@@ -658,7 +643,7 @@ body:not(.is-gvbm) .gv-only{display:none!important}
         <button class="btn bg" onclick="copyShareLink()">🔗 Link GV</button>
       </div>
     </div>
-    <div style="background:var(--white);border:1.5px solid var(--rose-l);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:18px">
+    <div style="background:var(--white);border:1.5px solid var(--rose-l);border-radius:var(--radius-lg);padding:16px 18px">
       <div style="font-size:13px;font-weight:700;color:var(--rose);margin-bottom:8px">⚠️ Vùng nguy hiểm</div>
       <p style="font-size:12px;color:var(--slate3);margin-bottom:10px">Xóa toàn bộ dữ liệu trên máy (không ảnh hưởng Google Sheets)</p>
       <button class="btn br" onclick="resetSystem()">🔄 Reset hệ thống</button>
@@ -747,8 +732,7 @@ var APP_VERSION='3.0';
 var DEFAULT_GAS = 'https://script.google.com/macros/s/AKfycbxK460cckYJpBbsJzSAc0aLvgsITM1TeyilNTiq5gOvI1K_62vjlBb0P-a7pGqP4CMH/exec';
 
 var SB   = JSON.parse(document.getElementById('_d_sb').textContent||'[]');
-// V3: Load HS từ localStorage nếu có (hệ thống clean, không demo)
-try{var _cachedSB=JSON.parse(localStorage.getItem('_students')||'[]');if(_cachedSB.length&&!SB.length)SB=_cachedSB;}catch(e){}
+try{var _cs=JSON.parse(localStorage.getItem('_students')||'[]');if(_cs.length&&!SB.length)SB=_cs;}catch(e){}
 var SUBJ = JSON.parse(document.getElementById('_d_subj').textContent);
 var NL   = JSON.parse(document.getElementById('_d_nl').textContent);
 var PC   = JSON.parse(document.getElementById('_d_pc').textContent);
@@ -842,7 +826,6 @@ T('lu').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 function loginOK(){
   if(GAS)localStorage.setItem('gas_url',GAS);
   T('login-screen').style.display='none';T('app-screen').style.display='block';
-  // V3: Chuẩn hóa role
   if(CU.role)CU.role=String(CU.role).trim().toLowerCase();
   if(!CU.role&&CU.username==='admin')CU.role='admin';
   userPerm=CU.role==='admin'?null:(CU.phan_cong?parsePC(CU.phan_cong):{});
@@ -921,6 +904,65 @@ function syncNow(silent){
 }
 
 // INIT
+
+// ═══ V3 DYNAMIC: Utility functions ═══
+function _getKhois(){
+  var set={};SB.forEach(function(s){if(s.khoi)set[s.khoi]=1;else if(s.lop){var k=parseInt(s.lop);if(k)set[k]=1;}});
+  return Object.keys(set).map(Number).sort();
+}
+function _getLops(){
+  var set={};SB.forEach(function(s){if(s.lop)set[s.lop]=1;});
+  return Object.keys(set).sort(function(a,b){var ka=parseInt(a),kb=parseInt(b);return ka!==kb?ka-kb:a.localeCompare(b);});
+}
+function _getLopsByKhoi(k){
+  return _getLops().filter(function(lop){return parseInt(lop)===k;});
+}
+function rebuildDynamic(){
+  // Rebuild khối tabs cho Nhập điểm
+  var khois=_getKhois();
+  var diemKts=T('diem-kts');
+  if(diemKts){
+    if(!khois.length){diemKts.innerHTML='<div style="padding:8px 12px;font-size:12px;color:var(--slate3)">Chưa có dữ liệu. Hãy nhập học sinh trước.</div>';}
+    else{var h='';khois.forEach(function(k,i){h+='<div class="kt k'+k+(i===0?' on':'')+'" data-k="'+k+'" onclick="dK('+k+',this)">Khối '+k+'</div>';});diemKts.innerHTML=h;}
+  }
+  // Rebuild khối tabs cho Thống kê
+  var tkKts=T('tk-kts');
+  if(tkKts){
+    var h2='<div class="kt on" onclick="tkK(0,this)">Toàn trường</div>';
+    khois.forEach(function(k){h2+='<div class="kt k'+k+'" onclick="tkK('+k+',this)">K'+k+'</div>';});
+    tkKts.innerHTML=h2;
+  }
+  // Rebuild khối select cho HS page
+  var hsKh=T('hs-kh');
+  if(hsKh){var o='<option value="">Tất cả khối</option>';khois.forEach(function(k){o+='<option value="'+k+'">Khối '+k+'</option>';});hsKh.innerHTML=o;}
+  // Rebuild lớp selects
+  bldLop('hs-lop','');bldLop('hb-lop','');
+  var firstK=khois.length?khois[0]:1;
+  bldLop('d-lop',String(firstK));
+  curK=firstK;
+  // buildSide + update
+  buildSide();hsFil();updS();updP();renderSt();renderTK(0);
+}
+
+// Setup + Reset
+function doSetup(){
+  var school=T('setup-school').value.trim();
+  if(!school){alert('Vui lòng nhập tên đơn vị');return;}
+  localStorage.setItem('school_name_full',school);
+  localStorage.setItem('school_year',T('setup-year').value.trim()||'2025-2026');
+  var gasUrl=T('setup-gas').value.trim();
+  if(gasUrl&&gasUrl.indexOf('script.google.com')>=0){localStorage.setItem('gas_url',gasUrl);DEFAULT_GAS=gasUrl;GAS=gasUrl;}
+  localStorage.setItem('_setup_done','1');
+  T('setup-screen').style.display='none';
+  var h2=document.querySelector('.lbox h2');if(h2)h2.textContent=school;
+  toast('✅ Khởi tạo thành công!','ok');
+}
+function resetSystem(){
+  if(!confirm('⚠️ XÓA DỮ LIỆU TRÊN MÁY?\n\n• Xóa cache điểm, HS, nhận xét\n• KHÔNG ảnh hưởng Google Sheets\n\nChắc chắn?'))return;
+  localStorage.clear();SB.length=0;allS=[];grades={};allGrades={};nhanXet={};
+  toast('🔄 Đã reset. Tải lại...','ok');setTimeout(function(){location.reload();},800);
+}
+
 function initApp(){
   GAS=localStorage.getItem('gas_url')||DEFAULT_GAS||'';
   try{allGrades=JSON.parse(localStorage.getItem('_allGrades')||'{}');}catch(e){allGrades={};}
@@ -929,8 +971,7 @@ function initApp(){
   try{var oldG=JSON.parse(localStorage.getItem('_grades')||'{}');if(Object.keys(oldG).length&&!Object.keys(allGrades.cn||{}).length){allGrades.cn=oldG;}}catch(e){}
   grades=allGrades[curPeriod]||{};
   try{nhanXet=JSON.parse(localStorage.getItem('_nhanxet')||'{}');}catch(e){nhanXet={};}
-  merge();buildSide();bldLop('hs-lop','');bldLop('d-lop','1');bldLop('hb-lop','');
-  dK(1,document.querySelectorAll('#diem-kts .kt')[0]);
+  merge();rebuildDynamic();
   hsFil();updS();updP();renderSt();renderTK(0);
   var st=T('sett-status');
   if(st)st.innerHTML=GAS?'<span style="color:var(--gd)">✅ Đã cấu hình</span>':'<span style="color:var(--r)">❌ Chưa có GAS URL</span>';
@@ -939,22 +980,24 @@ function initApp(){
 }
 
 function merge(){allS=SB.map(function(s){return Object.assign({},s,grades[s.ma]||{});});}
-function updateAll(){merge();buildSide();hsFil();dFil();updS();updP();renderSt();renderTK(tkKF);allGrades[curPeriod]=grades;try{localStorage.setItem('_allGrades',JSON.stringify(allGrades));}catch(e){}}
+function updateAll(){merge();rebuildDynamic();dFil();allGrades[curPeriod]=grades;try{localStorage.setItem('_allGrades',JSON.stringify(allGrades));}catch(e){}}
 function updS(){var d=allS.filter(isDone).length;T('c-nhap').textContent=d;T('c-chua').textContent=SB.length-d;T('c-tot').textContent=SB.length;T('c-nam').textContent=SB.filter(function(s){return s.gt==='Nam';}).length;T('c-nu').textContent=SB.filter(function(s){return s.gt==='Nữ';}).length;}
 function updP(){var d=allS.filter(isDone).length,p=SB.length?Math.round(d/SB.length*100):0;if(T('s-prog'))T('s-prog').textContent=d+'/'+SB.length;if(T('s-pb'))T('s-pb').style.width=p+'%';if(T('s-pct'))T('s-pct').textContent=p+'%';if(T('sb-tot'))T('sb-tot').textContent=SB.length;}
 
 // SIDEBAR + NAV
 function buildSide(){
   var el=T('side-lops');if(!el)return;
+  var lops=_getLops();
+  if(!lops.length){el.innerHTML='<div style="padding:8px 12px;font-size:11px;color:rgba(255,255,255,.4)">Chưa có lớp</div>';return;}
   var h='';
-  [1,2,3,4,5].forEach(function(k){['A','B','C','D','E'].forEach(function(c){
-    var lop=k+c,hs=SB.filter(function(s){return s.lop===lop;}),tot=hs.length,done=hs.filter(isDone).length;
-    var cl=done===tot?'ok':done>0?'pt':'no';
+  lops.forEach(function(lop){
+    var hs=SB.filter(function(s){return s.lop===lop;}),tot=hs.length,done=hs.filter(isDone).length;
+    var cl=done===tot&&tot>0?'ok':done>0?'pt':'no';
     h+='<div class="si" onclick="jumpLop(\''+lop+'\')"><span style="width:15px;text-align:center">📋</span>Lớp '+lop+'<span class="sbdg '+cl+'">'+done+'/'+tot+'</span></div>';
-  });});
+  });
   el.innerHTML=h;
 }
-function jumpLop(lop){var k=parseInt(lop);gp('pg-diem');dK(k,document.querySelectorAll('#diem-kts .kt')[k-1]);T('d-lop').value=lop;dFil();}
+function jumpLop(lop){var k=parseInt(lop);gp('pg-diem');dK(k);T('d-lop').value=lop;dFil();}
 function gp(id,el){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});T(id).classList.add('on');
   document.querySelectorAll('.ntab').forEach(function(t){t.classList.remove('on');});if(el)el.classList.add('on');
@@ -964,8 +1007,8 @@ function gp(id,el){
 }
 function bldLop(id,khoi){
   var el=T(id);if(!el)return;var o='<option value="">Tất cả lớp</option>';
-  var ks=khoi?[parseInt(khoi)]:[1,2,3,4,5];
-  ks.forEach(function(k){['A','B','C','D','E'].forEach(function(c){o+='<option value="'+k+c+'">Lớp '+k+c+'</option>';});});
+  var lops=khoi?_getLopsByKhoi(parseInt(khoi)):_getLops();
+  lops.forEach(function(lop){o+='<option value="'+lop+'">Lớp '+lop+'</option>';});
   el.innerHTML=o;
 }
 
@@ -1037,7 +1080,7 @@ function _shortName(n){return{
   'Tiếng dân tộc':'TDT'
 }[n]||n.substring(0,6);}
 
-function dK(k,el){curK=k;document.querySelectorAll('#diem-kts .kt').forEach(function(t){t.classList.remove('on');});if(el)el.classList.add('on');bldLop('d-lop',String(k));dFil();}
+function dK(k,el){curK=k;document.querySelectorAll('#diem-kts .kt').forEach(function(t){t.classList.remove('on');});if(el){el.classList.add('on');}else{document.querySelectorAll('#diem-kts .kt').forEach(function(t){if(t.dataset.k==String(k))t.classList.add('on');});}bldLop('d-lop',String(k));dFil();}
 function dFil(){
   var lop=T('d-lop').value,q=T('d-q').value.toLowerCase(),nt=T('d-nt').value;
   dF=allS.filter(function(s){if(s.khoi!==curK)return false;if(lop&&s.lop!==lop)return false;if(nt==='done'&&!isDone(s))return false;if(nt==='todo'&&isDone(s))return false;if(q&&s.ten.toLowerCase().indexOf(q)<0)return false;return true;});
@@ -1887,15 +1930,16 @@ function showCSDLPicker(){
   h+='<h3 style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px">Đồng bộ CSDL ngành</h3>';
   h+='<p style="font-size:12px;color:var(--slate3)">Kỳ: <strong style="color:'+period.color+'">'+period.name+'</strong> — Chọn khối lớp để xuất</p></div>';
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:400px;margin:0 auto">';
-  [1,2,3,4,5].forEach(function(k){
+  var _csdlKhois=_getKhois();
+  var colors={1:'#2563eb',2:'#059669',3:'#d97706',4:'#7c3aed',5:'#e11d48'};
+  _csdlKhois.forEach(function(k){
     var count=SB.filter(function(s){return s.khoi===k;}).length;
-    var colors=['','#2563eb','#059669','#d97706','#7c3aed','#e11d48'];
     h+='<div onclick="_expCSDLKhoi('+k+');cm(\x27csdlBg\x27)" style="cursor:pointer;padding:16px;border-radius:12px;border:2px solid #e2e8f0;text-align:center;transition:all .2s;background:white" onmouseover="this.style.borderColor=\x27'+colors[k]+'\x27;this.style.background=\x27#f8fafc\x27" onmouseout="this.style.borderColor=\x27#e2e8f0\x27;this.style.background=\x27white\x27">';
     h+='<div style="font-size:24px;font-weight:800;color:'+colors[k]+'">Lớp '+k+'</div>';
     h+='<div style="font-size:11px;color:var(--slate3);margin-top:4px">'+count+' học sinh</div></div>';
   });
   h+='</div>';
-  h+='<div style="text-align:center;margin-top:16px"><button class="btn bout" onclick="expCSDLAll()" style="font-size:12px">📦 Xuất tất cả 5 khối</button></div>';
+  h+='<div style="text-align:center;margin-top:16px"><button class="btn bout" onclick="expCSDLAll()" style="font-size:12px">📦 Xuất tất cả</button></div>';
   T('csdlBd').innerHTML=h;
   T('csdlBg').classList.add('on');
 }
@@ -1918,11 +1962,12 @@ function expCSDL(){
   }
   loader('Đang xuất 5 file CSDL ngành...');
   var delay=0;
-  [1,2,3,4,5].forEach(function(khoi){
+  var _allK=_getKhois();
+  _allK.forEach(function(khoi,idx){
     setTimeout(function(){
       T('ldr-t').textContent='Xuất Lớp '+khoi+'...';
       _expCSDLKhoi(khoi);
-      if(khoi===5){loader();toast('🏛️ Đã xuất 5 file CSDL ngành!','ok');}
+      if(idx===_allK.length-1){loader();toast('🏛️ Đã xuất '+_allK.length+' file CSDL ngành!','ok');}
     },delay);
     delay+=600;
   });
@@ -2162,12 +2207,15 @@ function saveAllLop(){
 function renderSt(){
   var SK={Toán:'mon_Toán','T.Việt':'mon_Tiếng_việt','Đ.đức':'mon_Đạo_đức',TNXH:'mon_Tự_nhiên_và_xã_hội',NN:'mon_Ngoại_ngữ',TH:'mon_TH-CN_Tin_học',AN:'mon_Nghệ_thuật_Âm_nhạc',MT:'mon_Nghệ_thuật_Mĩ_thuật',HĐTN:'mon_Hoạt_động_trải_nghiệm',GDTC:'mon_Giáo_dục_thể_chất'};
   var html='';
-  [1,2,3,4,5].forEach(function(k){
+  var khois=_getKhois();
+  if(!khois.length){T('st-ct').innerHTML='<div class="empty"><div class="ei">📋</div><p>Chưa có dữ liệu học sinh</p></div>';return;}
+  khois.forEach(function(k){
     var sj=Object.keys(SK);
+    var kLops=_getLopsByKhoi(k);if(!kLops.length)return;
     html+='<div style="margin-bottom:15px"><div style="font-size:13px;font-weight:700;color:var(--p);background:var(--pl);padding:5px 11px;border-radius:var(--r8);display:inline-block;margin-bottom:6px">Khối '+k+'</div><div class="sgw"><table class="sgt"><thead><tr><th>Lớp</th>';
     sj.forEach(function(s){html+='<th>'+s+'</th>';});html+='<th>Tiến độ</th></tr></thead><tbody>';
-    ['A','B','C','D','E'].forEach(function(c){
-      var lop=k+c,hs=SB.filter(function(s){return s.lop===lop;}),tot=hs.length;
+    kLops.forEach(function(lop){
+      var hs=SB.filter(function(s){return s.lop===lop;}),tot=hs.length;
       html+='<tr><td style="text-align:left;font-weight:600;background:#fafbfd">'+lop+' ('+tot+')</td>';
       sj.forEach(function(subj){var key=SK[subj];var f=hs.filter(function(s){return(grades[s.ma]||{})[key];}).length;html+=!f?'<td class="sg-no">0</td>':f===tot?'<td class="sg-ok">✓</td>':'<td class="sg-pt">'+f+'/'+tot+'</td>';});
       var d=hs.filter(isDone).length,p=tot?Math.round(d/tot*100):0;
@@ -2210,7 +2258,7 @@ function onDrop(ev){ev.preventDefault();T('drop-zone').classList.remove('drag');
 function onFileChange(inp){if(inp.files.length)processFile(inp.files[0]);}
 function processFile(file){if(file.size>5*1024*1024){toast('❌ File quá lớn','err');return;}loader('Đọc file...');var r=new FileReader();r.onload=function(e){try{loader();var wb=XLSX.read(e.target.result,{type:'array'});var ws=wb.Sheets[wb.SheetNames[0]];var raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});parseImport(raw);}catch(err){loader();toast('❌ '+err.message,'err');}};r.readAsArrayBuffer(file);}
 function parseImport(rows){var start=rows[0]&&isNaN(parseInt(rows[0][0]))?1:0;importData=[];rows.slice(start).forEach(function(row){var ten=row[2]?String(row[2]).trim():'';if(!ten)return;importData.push({stt:String(row[0]||''),lop:String(row[1]||'').trim().toUpperCase(),khoi:parseInt(row[1])||1,ma:String(Math.floor(1e9+Math.random()*9e9)),ten:ten,ns:String(row[3]||''),gt:String(row[4]||'')});});if(!importData.length){toast('❌ Không đọc được','err');return;}T('imp-preview').innerHTML='<div class="ib green"><strong>✅ '+importData.length+' HS sẵn sàng</strong><p>Nhấn Upload để lưu lên Sheets</p></div><button class="btn bp" onclick="confirmImport()">✅ Xác nhận</button>';}
-function confirmImport(){if(!importData.length)return;SB.length=0;importData.forEach(function(s){SB.push(s);});try{localStorage.setItem('_students',JSON.stringify(SB));}catch(e){}merge();buildSide();hsFil();updS();updP();toast('✅ Cập nhật '+importData.length+' HS','ok');if(GAS){loader('Upload...');var CHUNK=50,i=0;function next(){if(i>=importData.length){loader();toast('☁️ Upload xong!','ok');return;}T('ldr-t').textContent='Upload '+Math.min(i+CHUNK,importData.length)+'/'+importData.length+'...';gasPost({action:'saveStudentsBatch',batch:importData.slice(i,i+CHUNK)}).then(function(){i+=CHUNK;next();}).catch(function(e){loader();toast('⚠️ '+e.message,'warn');});}next();}importData=[];}
+function confirmImport(){if(!importData.length)return;SB.length=0;importData.forEach(function(s){SB.push(s);});try{localStorage.setItem('_students',JSON.stringify(SB));}catch(e){}merge();rebuildDynamic();hsFil();updS();updP();toast('✅ Cập nhật '+importData.length+' HS','ok');if(GAS){loader('Upload...');var CHUNK=50,i=0;function next(){if(i>=importData.length){loader();toast('☁️ Upload xong!','ok');return;}T('ldr-t').textContent='Upload '+Math.min(i+CHUNK,importData.length)+'/'+importData.length+'...';gasPost({action:'saveStudentsBatch',batch:importData.slice(i,i+CHUNK)}).then(function(){i+=CHUNK;next();}).catch(function(e){loader();toast('⚠️ '+e.message,'warn');});}next();}importData=[];}
 
 // CÀI ĐẶT
 function saveSchoolInfo(){var n=T('imp-school').value.trim(),a=T('imp-addr').value.trim();if(n)localStorage.setItem('school_name_full',n);if(a)localStorage.setItem('school_addr',a);toast('✅ Đã lưu','ok');}
@@ -2521,49 +2569,12 @@ function expBangCLWord(){
   toast('📄 Xuất bảng chất lượng','ok');
 }
 
-
-// ═══ V3 CLEAN: SETUP + RESET ═══
-function doSetup(){
-  var school=T('setup-school').value.trim(),year=T('setup-year').value.trim();
-  if(!school){alert('Vui lòng nhập tên đơn vị');return;}
-  localStorage.setItem('school_name_full',school);
-  localStorage.setItem('school_year',year||'2025-2026');
-  var adminName=T('setup-admin').value.trim();
-  if(adminName)localStorage.setItem('admin_name',adminName);
-  var gasUrl=T('setup-gas').value.trim();
-  if(gasUrl&&gasUrl.indexOf('script.google.com')>=0){localStorage.setItem('gas_url',gasUrl);DEFAULT_GAS=gasUrl;GAS=gasUrl;}
-  localStorage.setItem('_setup_done','1');
-  T('setup-screen').style.display='none';
-  // Cập nhật UI
-  var h2=document.querySelector('.lbox h2');if(h2)h2.textContent=school;
-  var sub=document.querySelector('.lbox-sub');if(sub)sub.innerHTML='Hệ thống Quản lý Chất lượng Giáo dục Tiểu học<br>Năm học '+year;
-  toast('✅ Khởi tạo thành công!','ok');
-}
-function resetSystem(){
-  if(!confirm('⚠️ XÓA TOÀN BỘ DỮ LIỆU TRÊN MÁY?\n\n• Xóa cache điểm, nhận xét, danh sách HS\n• Xóa thông tin đăng nhập\n• KHÔNG ảnh hưởng Google Sheets\n\nBạn chắc chắn?'))return;
-  localStorage.clear();
-  SB.length=0;allS=[];grades={};allGrades={};nhanXet={};
-  toast('🔄 Đã reset. Tải lại trang...','ok');
-  setTimeout(function(){location.reload();},1000);
-}
-
 // AUTO-LOGIN
 window.addEventListener('load',function(){
-  // V3: Check setup đã chạy chưa
-  if(!localStorage.getItem('_setup_done')){
-    T('setup-screen').style.display='block';
-    // Pre-fill GAS URL nếu có
-    if(DEFAULT_GAS)T('setup-gas').value=DEFAULT_GAS;
-    return;
-  }
-  // Cập nhật tên trường từ localStorage
+  // V3: Setup check
+  if(!localStorage.getItem('_setup_done')){T('setup-screen').style.display='block';if(DEFAULT_GAS)T('setup-gas').value=DEFAULT_GAS;return;}
   var savedSchool=localStorage.getItem('school_name_full');
-  if(savedSchool){
-    var h2=document.querySelector('.lbox h2');if(h2)h2.textContent=savedSchool;
-    var sbH1=document.querySelector('.sb-brand h1');if(sbH1)sbH1.textContent=savedSchool.replace(/^Trường Tiểu học\s*/i,'TH ');
-  }
-  var savedYear=localStorage.getItem('school_year');
-  if(savedYear){var sub=document.querySelector('.lbox-sub');if(sub)sub.innerHTML='Hệ thống Quản lý Chất lượng Giáo dục Tiểu học<br>Năm học '+savedYear;}
+  if(savedSchool){var _h=document.querySelector('.lbox h2');if(_h)_h.textContent=savedSchool;var _sb=document.querySelector('.sb-brand h1');if(_sb)_sb.textContent=savedSchool.replace(/^Trường Tiểu học\s*/i,'TH ');}
   // V2.0: Xóa cache URL cũ nếu DEFAULT_GAS đã thay đổi
   var cachedGAS=localStorage.getItem('gas_url');
   if(cachedGAS&&DEFAULT_GAS&&cachedGAS!==DEFAULT_GAS){localStorage.setItem('gas_url',DEFAULT_GAS);GAS=DEFAULT_GAS;}
