@@ -74,7 +74,7 @@ header.scrolled .nav-pill{box-shadow:var(--sh-lg)}
 
 .hero-desc{font-size:16.5px;line-height:1.85;color:var(--muted);max-width:490px;margin-bottom:36px;animation:fadeUp .7s ease-out .4s both}
 
-.hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .7s ease-out .5s both}
+
 
 .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:all .3s;border:none;cursor:pointer;font-family:var(--sans);letter-spacing:.2px;position:relative;overflow:hidden}
 .btn-pri{background:linear-gradient(135deg,var(--pri),var(--vio));color:white;box-shadow:0 6px 24px rgba(29,78,216,.3),0 2px 6px rgba(29,78,216,.15)}
@@ -85,38 +85,42 @@ header.scrolled .nav-pill{box-shadow:var(--sh-lg)}
 .btn-out:hover{border-color:var(--pri);color:var(--pri);transform:translateY(-2px);box-shadow:var(--sh);background:var(--pri-xxl)}
 
 /* ═══ FLOATING BADGES ═══ */
-.hero-float{position:relative;min-height:500px;animation:fadeUp .8s ease-out .4s both}
-.fcard{position:absolute;padding:15px 20px;border-radius:14px;color:white;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:12px;transition:all .35s;cursor:default;max-width:275px;box-shadow:var(--sh-lg);border:none}
-.fcard:hover{transform:scale(1.07)!important;box-shadow:0 20px 56px rgba(15,23,42,.18)}
-.fcard i{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;background:rgba(255,255,255,.2)!important;color:white!important}
-.fcard span{line-height:1.4;color:rgba(255,255,255,.95)}
 
-.fc1{top:0;left:6%;animation:fl1 6s ease-in-out infinite;background:linear-gradient(135deg,#1d4ed8,#2563eb)}
-.fc1 i{}
-.fc1:hover{}
+/* ═══ HERO 3D SYSTEM CARDS ═══ */
+.hero-cards{display:flex;flex-direction:column;gap:14px;animation:fadeUp .8s ease-out .4s both}
+.hcard{display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:16px;text-decoration:none;color:white;transition:all .35s;position:relative;overflow:hidden;transform:perspective(800px) rotateY(-2deg);transform-origin:left center}
+.hcard:hover{transform:perspective(800px) rotateY(0deg) translateY(-4px) scale(1.02);box-shadow:0 20px 50px rgba(0,0,0,.18)}
+.hcard:active{transform:perspective(800px) rotateY(0deg) scale(.98)}
+.hcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 60%);opacity:0;transition:opacity .3s}
+.hcard:hover::before{opacity:1}
+.hcard-icon{width:48px;height:48px;border-radius:13px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;backdrop-filter:blur(8px);transition:transform .3s}
+.hcard:hover .hcard-icon{transform:scale(1.1) rotate(-5deg)}
+.hcard-body{flex:1}
+.hcard-title{font-size:16px;font-weight:700;margin-bottom:3px}
+.hcard-sub{font-size:11.5px;opacity:.75;font-weight:400}
+.hcard-arrow{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .3s}
+.hcard:hover .hcard-arrow{background:rgba(255,255,255,.3);transform:translateX(4px)}
+.hcard-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;background:rgba(255,255,255,.2);letter-spacing:.5px;white-space:nowrap}
+.hc1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);box-shadow:0 8px 28px rgba(29,78,216,.3)}
+.hc2{background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 8px 28px rgba(5,150,105,.25)}
+.hc3{background:linear-gradient(135deg,#7c3aed,#8b5cf6);box-shadow:0 8px 28px rgba(124,58,237,.25)}
+.hc4{background:linear-gradient(135deg,#94a3b8,#64748b);box-shadow:0 8px 28px rgba(100,116,139,.2);opacity:.85}
+.hc4:hover{opacity:1}
 
-.fc2{top:88px;right:0;animation:fl2 7s ease-in-out infinite .5s;background:linear-gradient(135deg,#4f46e5,#6366f1)}
-.fc2 i{}
-.fc2:hover{}
-
-.fc3{top:180px;left:0;animation:fl1 5.5s ease-in-out infinite 1s;background:linear-gradient(135deg,#059669,#10b981)}
-.fc3 i{}
-.fc3:hover{}
-
-.fc4{top:272px;right:2%;animation:fl2 6.5s ease-in-out infinite 1.5s;background:linear-gradient(135deg,#7c9ab5,#94b3cc)}
-.fc4 i{}
-.fc4:hover{}
-
-.fc5{top:364px;left:10%;animation:fl1 7s ease-in-out infinite 2s;background:linear-gradient(135deg,#b45309,#d97706)}
-.fc5 i{}
-.fc5:hover{}
-
-.fc6{bottom:0;right:6%;animation:fl2 5s ease-in-out infinite 2.5s;background:linear-gradient(135deg,#0e7490,#0891b2)}
-.fc6 i{}
-.fc6:hover{}
-
-@keyframes fl1{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
-@keyframes fl2{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* ═══ HERO 4 BUTTONS ═══ */
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;animation:fadeUp .7s ease-out .5s both}
+.hbtn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;transition:all .3s;position:relative;overflow:hidden;font-family:var(--sans)}
+.hbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 60%);opacity:0;transition:opacity .3s}
+.hbtn:hover{transform:translateY(-3px)}
+.hbtn:hover::before{opacity:1}
+.hb1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:white;box-shadow:0 6px 22px rgba(29,78,216,.3)}
+.hb1:hover{box-shadow:0 12px 36px rgba(29,78,216,.4)}
+.hb2{background:linear-gradient(135deg,#059669,#10b981);color:white;box-shadow:0 6px 22px rgba(5,150,105,.25)}
+.hb2:hover{box-shadow:0 12px 36px rgba(5,150,105,.35)}
+.hb3{background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:white;box-shadow:0 6px 22px rgba(124,58,237,.25)}
+.hb3:hover{box-shadow:0 12px 36px rgba(124,58,237,.35)}
+.hb4{background:var(--card);color:var(--muted);border:2px solid var(--border);box-shadow:var(--sh-sm)}
+.hb4:hover{border-color:var(--pri);color:var(--pri);box-shadow:var(--sh)}
 
 /* ═══ COMMON ═══ */
 section{padding:100px 32px}
@@ -224,7 +228,7 @@ footer{padding:52px 32px 36px;background:var(--ink);color:rgba(255,255,255,.5)}
   .hero{padding:110px 24px 60px}
   .hero-inner{grid-template-columns:1fr;text-align:center}
   .hero-desc{margin-left:auto;margin-right:auto}
-  .hero-actions{justify-content:center}.hero-float{display:none}
+  .hero-btns{justify-content:center}.hero-cards{display:none}
   .sys-grid{grid-template-columns:1fr}
   .feat-grid{grid-template-columns:1fr 1fr}
   .stat-grid{grid-template-columns:1fr 1fr}
@@ -262,18 +266,34 @@ footer{padding:52px 32px 36px;background:var(--ink);color:rgba(255,255,255,.5)}
       <h1 class="hero-title">Trường Tiểu học<br>Diễn Liên</h1>
       <div class="hero-location"><i class="fa-solid fa-location-dot"></i> Xã Quảng Châu, tỉnh Nghệ An</div>
       <p class="hero-desc">Nền tảng tích hợp Hồ sơ số, Học bạ số, Sổ chủ nhiệm điện tử và Quản lý chất lượng giáo dục — hướng tới quản trị nhà trường minh bạch, chính xác và hiệu quả.</p>
-      <div class="hero-actions">
-        <a href="https://www.tieuhocdienlien.com/" class="btn btn-pri"><i class="fa-solid fa-folder-open"></i> Hồ sơ số trường học</a>
-        <a href="https://hososotruonghoc.github.io/dienlien/" class="btn btn-out"><i class="fa-solid fa-chart-line"></i> Quản lý chất lượng</a>
+      <div class="hero-btns">
+        <a href="https://hososotruonghoc.github.io/dienlien/" class="hbtn hb1"><i class="fa-solid fa-chart-line"></i> Quản lý chất lượng</a>
+        <a href="https://www.tieuhocdienlien.com/" class="hbtn hb2"><i class="fa-solid fa-building-columns"></i> Hồ sơ số nhà trường</a>
+        <a href="https://gvcn-dienlien.netlify.app/" class="hbtn hb3"><i class="fa-solid fa-robot"></i> Sổ chủ nhiệm AI</a>
+        <a href="#" class="hbtn hb4" onclick="event.preventDefault();alert('Học bạ số đang được phát triển!')"><i class="fa-solid fa-graduation-cap"></i> Học bạ số</a>
       </div>
     </div>
-    <div class="hero-float">
-      <div class="fcard fc1"><i class="fa-solid fa-arrows-rotate"></i><span>Chuyển đổi số toàn diện nhà trường</span></div>
-      <div class="fcard fc2"><i class="fa-solid fa-bullseye"></i><span>Minh bạch · Chính xác · Kịp thời</span></div>
-      <div class="fcard fc3"><i class="fa-solid fa-heart"></i><span>Lấy học sinh làm trung tâm</span></div>
-      <div class="fcard fc4"><i class="fa-solid fa-database"></i><span>Dữ liệu đồng bộ — Quản lý thông minh</span></div>
-      <div class="fcard fc5"><i class="fa-solid fa-feather"></i><span>Giảm áp lực hồ sơ cho giáo viên</span></div>
-      <div class="fcard fc6"><i class="fa-solid fa-seedling"></i><span>Nâng cao chất lượng giáo dục bền vững</span></div>
+    <div class="hero-cards">
+      <a href="https://hososotruonghoc.github.io/dienlien/" class="hcard hc1">
+        <div class="hcard-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="hcard-body"><div class="hcard-title">Quản lý chất lượng</div><div class="hcard-sub">Đánh giá TT27 · Thống kê · Báo cáo</div></div>
+        <div class="hcard-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
+      <a href="https://www.tieuhocdienlien.com/" class="hcard hc2">
+        <div class="hcard-icon"><i class="fa-solid fa-building-columns"></i></div>
+        <div class="hcard-body"><div class="hcard-title">Hồ sơ số nhà trường</div><div class="hcard-sub">Lưu trữ · Tra cứu · Google Drive</div></div>
+        <div class="hcard-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
+      <a href="https://gvcn-dienlien.netlify.app/" class="hcard hc3">
+        <div class="hcard-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="hcard-body"><div class="hcard-title">Sổ chủ nhiệm AI</div><div class="hcard-sub">Nhận xét thông minh · Theo dõi HS</div></div>
+        <div class="hcard-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      </a>
+      <a href="#" class="hcard hc4" onclick="event.preventDefault();alert('Học bạ số đang được phát triển. Vui lòng quay lại sau!')">
+        <div class="hcard-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="hcard-body"><div class="hcard-title">Học bạ số</div><div class="hcard-sub">Sắp ra mắt · Xuất Word chuẩn BỘ</div></div>
+        <div class="hcard-badge">Sắp ra mắt</div>
+      </a>
     </div>
   </div>
 </section>
