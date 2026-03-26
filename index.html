@@ -104,23 +104,35 @@ header.scrolled .nav-pill{box-shadow:var(--sh-lg)}
 .hc1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);box-shadow:0 8px 28px rgba(29,78,216,.3)}
 .hc2{background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 8px 28px rgba(5,150,105,.25)}
 .hc3{background:linear-gradient(135deg,#7c3aed,#8b5cf6);box-shadow:0 8px 28px rgba(124,58,237,.25)}
-.hc4{background:linear-gradient(135deg,#94a3b8,#64748b);box-shadow:0 8px 28px rgba(100,116,139,.2);opacity:.85}
-.hc4:hover{opacity:1}
+.hc4{background:linear-gradient(135deg,#b45309,#d97706);box-shadow:0 8px 28px rgba(180,83,9,.25)}
+.hc4:hover{}
 
-/* ═══ HERO 4 BUTTONS ═══ */
-.hero-btns{display:flex;gap:10px;flex-wrap:wrap;animation:fadeUp .7s ease-out .5s both}
-.hbtn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;transition:all .3s;position:relative;overflow:hidden;font-family:var(--sans)}
-.hbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 60%);opacity:0;transition:opacity .3s}
-.hbtn:hover{transform:translateY(-3px)}
-.hbtn:hover::before{opacity:1}
-.hb1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:white;box-shadow:0 6px 22px rgba(29,78,216,.3)}
-.hb1:hover{box-shadow:0 12px 36px rgba(29,78,216,.4)}
-.hb2{background:linear-gradient(135deg,#059669,#10b981);color:white;box-shadow:0 6px 22px rgba(5,150,105,.25)}
-.hb2:hover{box-shadow:0 12px 36px rgba(5,150,105,.35)}
-.hb3{background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:white;box-shadow:0 6px 22px rgba(124,58,237,.25)}
-.hb3:hover{box-shadow:0 12px 36px rgba(124,58,237,.35)}
-.hb4{background:var(--card);color:var(--muted);border:2px solid var(--border);box-shadow:var(--sh-sm)}
-.hb4:hover{border-color:var(--pri);color:var(--pri);box-shadow:var(--sh)}
+/* ═══ HERO 4 VISUAL TILES ═══ */
+.hero-tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;animation:fadeUp .7s ease-out .5s both;max-width:460px}
+.htile{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px 18px;border-radius:18px;text-decoration:none;color:white;transition:all .4s;position:relative;overflow:hidden;min-height:140px;transform:perspective(600px) rotateX(0deg);animation:tileFloat 5s ease-in-out infinite}
+.htile:nth-child(2){animation-delay:.5s}.htile:nth-child(3){animation-delay:1s}.htile:nth-child(4){animation-delay:1.5s}
+@keyframes tileFloat{0%,100%{transform:perspective(600px) translateY(0)}50%{transform:perspective(600px) translateY(-6px)}}
+.htile::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,transparent 50%,rgba(0,0,0,.08) 100%);pointer-events:none}
+.htile::after{content:'';position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 1px 1px rgba(255,255,255,.2),inset 0 -1px 2px rgba(0,0,0,.1);pointer-events:none}
+.htile:hover{transform:perspective(600px) translateY(-8px) scale(1.04)!important;filter:brightness(1.08)}
+.htile:active{transform:perspective(600px) scale(.96)!important}
+.htile-icons{display:flex;gap:10px;margin-bottom:14px;position:relative;z-index:1}
+.htile-icons i{font-size:28px;opacity:.9;filter:drop-shadow(0 3px 6px rgba(0,0,0,.15));transition:transform .3s}
+.htile:hover .htile-icons i:first-child{transform:scale(1.15) rotate(-8deg)}
+.htile:hover .htile-icons i:last-child{transform:scale(1.1) rotate(5deg)}
+.htile-name{font-family:var(--sans);font-size:14px;font-weight:700;text-align:center;position:relative;z-index:1;text-shadow:0 1px 3px rgba(0,0,0,.15)}
+/* Card 1: Blue - QLCL */
+.ht1{background:linear-gradient(145deg,#1e3a6e 0%,#2a5298 40%,#4a80d4 100%);box-shadow:0 10px 30px rgba(29,78,216,.35),0 4px 8px rgba(29,78,216,.15)}
+.ht1:hover{box-shadow:0 18px 45px rgba(29,78,216,.4),0 6px 12px rgba(29,78,216,.2)}
+/* Card 2: Green - Hồ sơ số */
+.ht2{background:linear-gradient(145deg,#1a5c3a 0%,#2d8a5e 40%,#4ec08d 100%);box-shadow:0 10px 30px rgba(5,150,105,.3),0 4px 8px rgba(5,150,105,.12)}
+.ht2:hover{box-shadow:0 18px 45px rgba(5,150,105,.38),0 6px 12px rgba(5,150,105,.18)}
+/* Card 3: Purple - Sổ CN AI */
+.ht3{background:linear-gradient(145deg,#4a2880 0%,#6d3bbd 40%,#9b6ef0 100%);box-shadow:0 10px 30px rgba(124,58,237,.3),0 4px 8px rgba(124,58,237,.12)}
+.ht3:hover{box-shadow:0 18px 45px rgba(124,58,237,.38),0 6px 12px rgba(124,58,237,.18)}
+/* Card 4: Amber - Học bạ số */
+.ht4{background:linear-gradient(145deg,#92400e 0%,#b45309 40%,#d97706 100%);box-shadow:0 10px 30px rgba(180,83,9,.3),0 4px 8px rgba(180,83,9,.12)}
+.ht4:hover{box-shadow:0 18px 45px rgba(180,83,9,.38),0 6px 12px rgba(180,83,9,.18)}
 
 /* ═══ COMMON ═══ */
 section{padding:100px 32px}
@@ -228,7 +240,7 @@ footer{padding:52px 32px 36px;background:var(--ink);color:rgba(255,255,255,.5)}
   .hero{padding:110px 24px 60px}
   .hero-inner{grid-template-columns:1fr;text-align:center}
   .hero-desc{margin-left:auto;margin-right:auto}
-  .hero-btns{justify-content:center}.hero-cards{display:none}
+  .hero-tiles{max-width:100%}.hero-cards{display:none}
   .sys-grid{grid-template-columns:1fr}
   .feat-grid{grid-template-columns:1fr 1fr}
   .stat-grid{grid-template-columns:1fr 1fr}
@@ -251,7 +263,7 @@ footer{padding:52px 32px 36px;background:var(--ink);color:rgba(255,255,255,.5)}
     <li><a href="#systems">Hệ thống</a></li>
     <li><a href="#features">Tính năng</a></li>
     <li><a href="#stats">Lợi ích</a></li>
-    <li><a href="https://www.tieuhocdienlien.com/" class="nav-cta"><i class="fa-solid fa-arrow-right-to-bracket"></i> Truy cập</a></li>
+    <li><a href="https://hososotruonghoc.github.io/dienlien/" class="nav-cta"><i class="fa-solid fa-arrow-right-to-bracket"></i> Truy cập</a></li>
   </ul>
   <button class="mobile-menu"><i class="fa-solid fa-bars"></i></button>
 </div>
@@ -266,11 +278,23 @@ footer{padding:52px 32px 36px;background:var(--ink);color:rgba(255,255,255,.5)}
       <h1 class="hero-title">Trường Tiểu học<br>Diễn Liên</h1>
       <div class="hero-location"><i class="fa-solid fa-location-dot"></i> Xã Quảng Châu, tỉnh Nghệ An</div>
       <p class="hero-desc">Nền tảng tích hợp Hồ sơ số, Học bạ số, Sổ chủ nhiệm điện tử và Quản lý chất lượng giáo dục — hướng tới quản trị nhà trường minh bạch, chính xác và hiệu quả.</p>
-      <div class="hero-btns">
-        <a href="https://hososotruonghoc.github.io/dienlien/" class="hbtn hb1"><i class="fa-solid fa-chart-line"></i> Quản lý chất lượng</a>
-        <a href="https://www.tieuhocdienlien.com/" class="hbtn hb2"><i class="fa-solid fa-building-columns"></i> Hồ sơ số nhà trường</a>
-        <a href="https://gvcn-dienlien.netlify.app/" class="hbtn hb3"><i class="fa-solid fa-robot"></i> Sổ chủ nhiệm AI</a>
-        <a href="#" class="hbtn hb4" onclick="event.preventDefault();alert('Học bạ số đang được phát triển!')"><i class="fa-solid fa-graduation-cap"></i> Học bạ số</a>
+      <div class="hero-tiles">
+        <a href="https://hososotruonghoc.github.io/dienlien/" class="htile ht1">
+          <div class="htile-icons"><i class="fa-solid fa-desktop"></i><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <div class="htile-name">Quản lý chất lượng</div>
+        </a>
+        <a href="https://www.tieuhocdienlien.com/" class="htile ht2">
+          <div class="htile-icons"><i class="fa-solid fa-folder-open"></i><i class="fa-solid fa-building-columns"></i></div>
+          <div class="htile-name">Hồ sơ số nhà trường</div>
+        </a>
+        <a href="https://gvcn-dienlien.netlify.app/" class="htile ht3">
+          <div class="htile-icons"><i class="fa-solid fa-robot"></i><i class="fa-solid fa-mobile-screen-button"></i></div>
+          <div class="htile-name">Sổ chủ nhiệm AI</div>
+        </a>
+        <a href="https://hososotruonghoc.github.io/dienlien/" class="htile ht4">
+          <div class="htile-icons"><i class="fa-solid fa-laptop"></i><i class="fa-solid fa-graduation-cap"></i></div>
+          <div class="htile-name">Học bạ số</div>
+        </a>
       </div>
     </div>
     <div class="hero-cards">
@@ -289,10 +313,10 @@ footer{padding:52px 32px 36px;background:var(--ink);color:rgba(255,255,255,.5)}
         <div class="hcard-body"><div class="hcard-title">Sổ chủ nhiệm AI</div><div class="hcard-sub">Nhận xét thông minh · Theo dõi HS</div></div>
         <div class="hcard-arrow"><i class="fa-solid fa-arrow-right"></i></div>
       </a>
-      <a href="#" class="hcard hc4" onclick="event.preventDefault();alert('Học bạ số đang được phát triển. Vui lòng quay lại sau!')">
+      <a href="https://hososotruonghoc.github.io/dienlien/" class="hcard hc4">
         <div class="hcard-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-        <div class="hcard-body"><div class="hcard-title">Học bạ số</div><div class="hcard-sub">Sắp ra mắt · Xuất Word chuẩn BỘ</div></div>
-        <div class="hcard-badge">Sắp ra mắt</div>
+        <div class="hcard-body"><div class="hcard-title">Học bạ số</div><div class="hcard-sub">Tích hợp AI xuất Word/PDF từ KQGD</div></div>
+        <div class="hcard-arrow"><i class="fa-solid fa-arrow-right"></i></div>
       </a>
     </div>
   </div>
